@@ -13,6 +13,7 @@ interface OrbitingPlanetProps {
   startAngle: number;
   tilt: number;
   planetRef: React.RefObject<THREE.Group>;
+  freeze?: boolean;
 }
 
 export function OrbitingPlanet({
@@ -23,6 +24,7 @@ export function OrbitingPlanet({
   startAngle,
   tilt,
   planetRef,
+  freeze = false,
 }: OrbitingPlanetProps) {
   const localPlanetRef = useRef<THREE.Group>(null);
   const orbitRef = useRef<THREE.Group>(null);
@@ -36,21 +38,21 @@ export function OrbitingPlanet({
       initialized.current = true;
     }
 
-    if (orbitRef.current) {
-      orbitRef.current.rotation.y += orbitSpeed;
+    if (!freeze) {
+      if (orbitRef.current) {
+        orbitRef.current.rotation.y += orbitSpeed;
+      }
+
+      if (localPlanetRef.current) {
+        localPlanetRef.current.rotation.y += 0.002;
+      }
     }
 
-    if (localPlanetRef.current) {
-      localPlanetRef.current.rotation.y += 0.002;
-
-      // Update world position - FIX: Only update position, not entire object
-      if (planetRef.current && localPlanetRef.current.parent) {
-        const worldPos = new THREE.Vector3();
-        localPlanetRef.current.getWorldPosition(worldPos);
-        
-        // Store position without affecting the group structure
-        planetRef.current.userData.worldPosition = worldPos;
-      }
+    // Always update world position
+    if (localPlanetRef.current && planetRef.current && localPlanetRef.current.parent) {
+      const worldPos = new THREE.Vector3();
+      localPlanetRef.current.getWorldPosition(worldPos);
+      planetRef.current.userData.worldPosition = worldPos;
     }
   });
 

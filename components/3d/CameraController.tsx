@@ -13,20 +13,20 @@ export function CameraController({ autoRotate, targetPlanet }: CameraControllerP
 
   useFrame(() => {
     if (targetPlanet) {
-      // Zoom to planet smoothly
+      // SUPER EXTREME ZOOM - Planet fills almost entire screen
       const planetPos = targetPlanet.position;
-      const distance = targetPlanet.radius + 8;
+      const distance = 2; // Fixed small distance regardless of planet size
       const angle = Math.atan2(planetPos.z, planetPos.x);
       
       const targetPos = new THREE.Vector3(
         planetPos.x + Math.cos(angle) * distance,
-        planetPos.y + 5,
+        planetPos.y, // Same height as planet
         planetPos.z + Math.sin(angle) * distance
       );
 
       camera.position.lerp(targetPos, 0.03);
       
-      // Look at planet
+      // Look at planet center
       const lookTarget = planetPos.clone();
       const currentLookAt = new THREE.Vector3();
       camera.getWorldDirection(currentLookAt);

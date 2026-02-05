@@ -5,12 +5,16 @@ import { useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
-export function CentralPlanet() {
+interface CentralPlanetProps {
+  freeze?: boolean;
+}
+
+export function CentralPlanet({ freeze = false }: CentralPlanetProps) {
   const planetRef = useRef<THREE.Group>(null);
   const { scene } = useGLTF('/models/planet1.glb');
 
   useFrame(() => {
-    if (planetRef.current) {
+    if (planetRef.current && !freeze) {
       planetRef.current.rotation.y += 0.001;
     }
   });
