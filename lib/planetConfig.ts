@@ -28,7 +28,7 @@ export const generatePlanetConfigs = (): PlanetConfig[] => [
     tilt: (Math.random() - 0.5) * 0.3,
   },
   {
-    model: '/models/planet4.glb',
+    model: '/models/planet6.glb',
     radius: 16,
     speed: 0.0005,
     size: 1.1,
@@ -46,11 +46,11 @@ export const generatePlanetConfigs = (): PlanetConfig[] => [
     tilt: (Math.random() - 0.5) * 0.3,
   },
   {
-    model: '/models/planet6.glb',
+    model: '/models/planet4.glb',
     radius: 24,
     speed: 0.0003,
     size: 1,
-    label: 'Skills',
+    label: 'Contact',
     startAngle: Math.random() * Math.PI * 2,
     tilt: (Math.random() - 0.5) * 0.3,
   },

@@ -9,15 +9,36 @@ interface TimelineNavbarProps {
 
 export default function TimelineNavbar({ onNavigate, activeSection }: TimelineNavbarProps) {
   const sections = ['Home', 'About', 'Projects', 'Experience', 'Contact'];
+  // Get color based on active section
+  const getActiveColor = () => {
+    switch(activeSection) {
+      case 0: return 'text-yellow-400';  // Home
+      case 1: return 'text-cyan-400';    // About
+      case 2: return 'text-green-400';   // Projects (changed to green)
+      case 3: return 'text-orange-400';  // Experience
+      case 4: return 'text-purple-400';  // Contact
+      default: return 'text-gray-400';
+    }
+  };
 
-  // Calculate rocket position percentage
+  const getProgressColor = () => {
+    switch(activeSection) {
+      case 0: return 'from-yellow-500 via-yellow-400 to-yellow-500';
+      case 1: return 'from-cyan-500 via-cyan-400 to-cyan-500';
+      case 2: return 'from-green-500 via-green-400 to-green-500';   // Projects (changed to green)
+      case 3: return 'from-orange-500 via-orange-400 to-orange-500';
+      case 4: return 'from-purple-500 via-purple-400 to-purple-500'; // Contact
+      default: return 'from-gray-500 via-gray-400 to-gray-500';
+    }
+  };
+
   const rocketPosition = (activeSection / (sections.length - 1)) * 100;
 
   return (
-    <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-6xl px-8">
+    <div className="fixed top-16 left-1/2 transform -translate-x-1/2 z-40 w-full max-w-6xl px-8">
       <nav className="relative">
         {/* Section labels - Centered above dots */}
-        <div className="relative mb-6 h-8">
+        <div className="relative mb-6 h-10">
           {sections.map((section, index) => {
             const isActive = activeSection === index;
             const position = (index / (sections.length - 1)) * 100;
@@ -26,11 +47,11 @@ export default function TimelineNavbar({ onNavigate, activeSection }: TimelineNa
               <motion.button
                 key={section}
                 onClick={() => onNavigate(index)}
-                className={`absolute top-0 -translate-x-1/2 text-xl font-semibold transition-all duration-300 ${
-                  isActive ? 'text-purple-300' : 'text-gray-500 hover:text-purple-400'
+                className={`absolute top-0 -translate-x-1/2 text-base font-mono font-bold tracking-[0.3em] transition-all duration-300 uppercase ${
+                  isActive ? getActiveColor() : 'text-white/40 hover:text-white/80'
                 }`}
                 style={{ left: `${position}%` }}
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
               >
                 {section}
@@ -42,11 +63,11 @@ export default function TimelineNavbar({ onNavigate, activeSection }: TimelineNa
         {/* Progress bar container */}
         <div className="relative h-1">
           {/* Background line */}
-          <div className="absolute inset-0 bg-gray-700 rounded-full" />
+          <div className="absolute inset-0 bg-white/20 rounded-full" />
 
           {/* Progress line (colored part) */}
           <motion.div
-            className="absolute left-0 top-0 h-full bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 rounded-full" 
+            className={`absolute left-0 top-0 h-full bg-gradient-to-r ${getProgressColor()} rounded-full shadow-lg`}
             initial={{ width: '0%' }}
             animate={{ width: `${rocketPosition}%` }}
             transition={{ type: 'spring', stiffness: 100, damping: 20 }}
@@ -61,7 +82,7 @@ export default function TimelineNavbar({ onNavigate, activeSection }: TimelineNa
               <motion.div
                 key={index}
                 className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full transition-colors duration-300 ${
-                  isPassed ? 'bg-white' : 'bg-gray-600'
+                  isPassed ? 'bg-white shadow-lg shadow-white/50' : 'bg-gray-600'
                 }`}
                 style={{ left: `${dotPosition}%`, marginLeft: '-6px' }}
                 whileHover={{ scale: 1.3 }}
@@ -69,7 +90,7 @@ export default function TimelineNavbar({ onNavigate, activeSection }: TimelineNa
             );
           })}
 
-          {/* Rocket SVG - Fully Horizontal */}
+          {/* Rocket SVG - PERFECTLY HORIZONTAL (pointing right) */}
           <motion.div
             className="absolute top-1/2 -translate-y-1/2"
             animate={{ left: `${rocketPosition}%` }}
@@ -78,7 +99,7 @@ export default function TimelineNavbar({ onNavigate, activeSection }: TimelineNa
           >
             <motion.div
               animate={{
-                y: [0, -3, 0],
+                x: [0, 2, 0],
               }}
               transition={{
                 repeat: Infinity,
@@ -92,7 +113,7 @@ export default function TimelineNavbar({ onNavigate, activeSection }: TimelineNa
                 viewBox="0 0 512 512"
                 xmlns="http://www.w3.org/2000/svg"
                 className="drop-shadow-2xl"
-                style={{ transform: 'rotate(0deg)' }}
+                style={{ transform: 'rotate(45deg)' }} // ROTATED -90 degrees for horizontal right
               >
                 <g>
                   <path
