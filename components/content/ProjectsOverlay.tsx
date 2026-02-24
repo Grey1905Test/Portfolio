@@ -82,7 +82,7 @@ export default function ProjectsOverlay({ isOpen, onClose }: ProjectsOverlayProp
   animate={{ x: 0 }}
   exit={{ x: '100%' }}
   transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-  className="group/nav fixed right-0 top-0 h-full w-full max-w-4xl bg-black/95 border-l-2 border-green-500 shadow-2xl z-50 overflow-y-auto font-mono"
+  className="group/nav fixed right-0 top-0 h-full w-full md:w-1/2 bg-black/95 border-l-2 border-green-500 shadow-2xl z-50 overflow-y-auto font-mono"
   style={{
     boxShadow: '0 0 50px rgba(0, 255, 0, 0.3), inset 0 0 100px rgba(0, 255, 0, 0.05)',
   }}
@@ -132,10 +132,10 @@ export default function ProjectsOverlay({ isOpen, onClose }: ProjectsOverlayProp
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="p-8"
+                className="p-8 pb-24"
               >
                 {/* Project Title with Typing Effect */}
-                <div className="mb-6 border-l-4 border-green-500 pl-4">
+                <div className="mb-8 border-l-4 border-green-500 pl-4">
                   <div className="text-green-500 text-xs tracking-widest mb-2 opacity-60">
                     PROJECT_ID
                   </div>

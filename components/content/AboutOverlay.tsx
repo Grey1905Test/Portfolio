@@ -81,7 +81,7 @@ export default function AboutOverlay({ isOpen, onClose }: AboutOverlayProps) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="group/nav fixed right-0 top-0 h-full w-full max-w-4xl bg-black/95 border-l-2 border-white shadow-2xl z-50 overflow-y-auto font-mono"
+            className="group/nav fixed right-0 top-0 h-full w-full md:w-1/2 bg-black/95 border-l-2 border-white shadow-2xl z-50 overflow-y-auto font-mono"
             style={{
               boxShadow: '0 0 50px rgba(255, 255, 255, 0.2), inset 0 0 100px rgba(255, 255, 255, 0.02)',
             }}
@@ -173,7 +173,7 @@ export default function AboutOverlay({ isOpen, onClose }: AboutOverlayProps) {
                 )}
 
                 {currentSection.type === 'grid' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4">
                     {currentSection.content.map((item, index) => (
                       <motion.div
                         key={index}
@@ -196,7 +196,7 @@ export default function AboutOverlay({ isOpen, onClose }: AboutOverlayProps) {
             </AnimatePresence>
 
             {/* Footer Terminal Line */}
-            <div className="absolute bottom-0 left-0 right-0 border-t border-white/30 text-white/60 text-xs text-center tracking-widest bg-black/95 backdrop-blur-sm py-4">
+            <div className="absolute bottom-0 left-0 right-0 pt-4 border-t border-white/30 text-white/60 text-xs text-center tracking-widest bg-black/95 backdrop-blur-sm py-4">
               RECORD_#{String(currentIndex + 1).padStart(3, '0')} :: PERSONAL_DATA :: TIMESTAMP_2026.02.23
             </div>
 
