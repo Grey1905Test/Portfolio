@@ -159,163 +159,29 @@ const handleBackToSolarSystem = () => {
         </>
       )}
 
-      {/* Ultra Fancy Return Button - Bottom Left */}
+      {/* Return to system - small, clean, futuristic */}
       {(showExperienceOverlay || showProjectsOverlay || showAboutOverlay || showContactOverlay) && (
         <motion.div
-          initial={{ opacity: 0, y: 100, rotate: -10 }}
-          animate={{ opacity: 1, y: 0, rotate: 0 }}
-          exit={{ opacity: 0, y: 100, rotate: -10 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           className="fixed bottom-6 left-6 z-50"
         >
-          <motion.button
+          <button
             onClick={handleBackToSolarSystem}
-            whileHover={{ 
-              scale: 1.1, 
-              rotate: [0, -2, 2, 0],
-              boxShadow: showExperienceOverlay
-                ? '0 0 40px rgba(251, 146, 60, 0.6), 0 0 80px rgba(251, 146, 60, 0.3)'
-                : showProjectsOverlay
-                ? '0 0 40px rgba(34, 197, 94, 0.6), 0 0 80px rgba(34, 197, 94, 0.3)'
-                : showContactOverlay
-                ? '0 0 40px rgba(244, 114, 182, 0.6), 0 0 80px rgba(244, 114, 182, 0.3)'
-                : '0 0 40px rgba(255, 255, 255, 0.6), 0 0 80px rgba(255, 255, 255, 0.3)'
-            }}
-            whileTap={{ scale: 0.9 }}
-            className={`group relative overflow-hidden backdrop-blur-xl ${
+            className={`group flex items-center gap-3 rounded-xl border-2 px-6 py-4 font-mono text-base font-semibold tracking-widest uppercase transition-all duration-200 ${
               showExperienceOverlay
-                ? 'bg-gradient-to-br from-orange-500/20 via-orange-400/10 to-orange-600/20 border-2 border-orange-400/50 text-orange-200'
+                ? 'border-orange-400/50 bg-orange-500/5 text-orange-300 hover:border-orange-400 hover:bg-orange-500/10'
                 : showProjectsOverlay
-                ? 'bg-gradient-to-br from-green-500/20 via-green-400/10 to-green-600/20 border-2 border-green-400/50 text-green-200'
+                ? 'border-green-400/50 bg-green-500/5 text-green-300 hover:border-green-400 hover:bg-green-500/10'
                 : showContactOverlay
-                ? 'bg-gradient-to-br from-pink-500/20 via-pink-400/10 to-pink-600/20 border-2 border-pink-400/50 text-pink-200'
-                : 'bg-gradient-to-br from-white/20 via-white/10 to-white/20 border-2 border-white/50 text-white'
-            } rounded-2xl p-6 font-mono font-bold tracking-wider transition-all duration-500 shadow-2xl`}
-            style={{
-              boxShadow: showExperienceOverlay
-                ? '0 0 30px rgba(251, 146, 60, 0.4), inset 0 0 30px rgba(251, 146, 60, 0.1), 0 20px 40px rgba(0, 0, 0, 0.3)'
-                : showProjectsOverlay
-                ? '0 0 30px rgba(34, 197, 94, 0.4), inset 0 0 30px rgba(34, 197, 94, 0.1), 0 20px 40px rgba(0, 0, 0, 0.3)'
-                : showContactOverlay
-                ? '0 0 30px rgba(244, 114, 182, 0.4), inset 0 0 30px rgba(244, 114, 182, 0.1), 0 20px 40px rgba(0, 0, 0, 0.3)'
-                : '0 0 30px rgba(255, 255, 255, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.1), 0 20px 40px rgba(0, 0, 0, 0.3)'
-            }}
+                ? 'border-pink-400/50 bg-pink-500/5 text-pink-300 hover:border-pink-400 hover:bg-pink-500/10'
+                : 'border-white/40 bg-white/5 text-white/90 hover:border-white/60 hover:bg-white/10'
+            }`}
           >
-            {/* Animated Corner Accents */}
-            <div className={`absolute top-2 left-2 w-6 h-6 border-l-2 border-t-2 ${
-              showExperienceOverlay ? 'border-orange-300' :
-              showProjectsOverlay ? 'border-green-300' :
-              showContactOverlay ? 'border-pink-300' : 'border-white'
-            }`}>
-              <motion.div
-                className={`absolute -top-1 -left-1 w-2 h-2 rounded-full ${
-                  showExperienceOverlay ? 'bg-orange-400' :
-                  showProjectsOverlay ? 'bg-green-400' :
-                  showContactOverlay ? 'bg-pink-400' : 'bg-white'
-                }`}
-                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-                transition={{ repeat: Infinity, duration: 2 }}
-              />
-            </div>
-            <div className={`absolute top-2 right-2 w-6 h-6 border-r-2 border-t-2 ${
-              showExperienceOverlay ? 'border-orange-300' :
-              showProjectsOverlay ? 'border-green-300' :
-              showContactOverlay ? 'border-pink-300' : 'border-white'
-            }`}>
-              <motion.div
-                className={`absolute -top-1 -right-1 w-2 h-2 rounded-full ${
-                  showExperienceOverlay ? 'bg-orange-400' :
-                  showProjectsOverlay ? 'bg-green-400' :
-                  showContactOverlay ? 'bg-pink-400' : 'bg-white'
-                }`}
-                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-                transition={{ repeat: Infinity, duration: 2, delay: 0.5 }}
-              />
-            </div>
-            <div className={`absolute bottom-2 left-2 w-6 h-6 border-l-2 border-b-2 ${
-              showExperienceOverlay ? 'border-orange-300' :
-              showProjectsOverlay ? 'border-green-300' :
-              showContactOverlay ? 'border-pink-300' : 'border-white'
-            }`}>
-              <motion.div
-                className={`absolute -bottom-1 -left-1 w-2 h-2 rounded-full ${
-                  showExperienceOverlay ? 'bg-orange-400' :
-                  showProjectsOverlay ? 'bg-green-400' :
-                  showContactOverlay ? 'bg-pink-400' : 'bg-white'
-                }`}
-                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-                transition={{ repeat: Infinity, duration: 2, delay: 1 }}
-              />
-            </div>
-            <div className={`absolute bottom-2 right-2 w-6 h-6 border-r-2 border-b-2 ${
-              showExperienceOverlay ? 'border-orange-300' :
-              showProjectsOverlay ? 'border-green-300' :
-              showContactOverlay ? 'border-pink-300' : 'border-white'
-            }`}>
-              <motion.div
-                className={`absolute -bottom-1 -right-1 w-2 h-2 rounded-full ${
-                  showExperienceOverlay ? 'bg-orange-400' :
-                  showProjectsOverlay ? 'bg-green-400' :
-                  showContactOverlay ? 'bg-pink-400' : 'bg-white'
-                }`}
-                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-                transition={{ repeat: Infinity, duration: 2, delay: 1.5 }}
-              />
-            </div>
-
-            {/* Rotating Background Pattern */}
-            <motion.div
-              className={`absolute inset-0 rounded-2xl opacity-20 ${
-                showExperienceOverlay ? 'bg-gradient-conic from-orange-400 via-orange-500 to-orange-400' :
-                showProjectsOverlay ? 'bg-gradient-conic from-green-400 via-green-500 to-green-400' :
-                showContactOverlay ? 'bg-gradient-conic from-pink-400 via-pink-500 to-pink-400' :
-                'bg-gradient-conic from-white via-gray-200 to-white'
-              }`}
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-            />
-
-            {/* Pulsing Inner Glow */}
-            <motion.div
-              className={`absolute inset-2 rounded-xl ${
-                showExperienceOverlay ? 'bg-orange-400/10' :
-                showProjectsOverlay ? 'bg-green-400/10' :
-                showContactOverlay ? 'bg-pink-400/10' : 'bg-white/10'
-              }`}
-              animate={{ opacity: [0.2, 0.8, 0.2] }}
-              transition={{ repeat: Infinity, duration: 3 }}
-            />
-
-            {/* Button Content */}
-            <div className="relative z-10 flex flex-col items-center gap-2">
-              <motion.div
-                animate={{ 
-                  x: [-3, 3, -3],
-                  rotate: [0, -5, 5, 0]
-                }}
-                transition={{ repeat: Infinity, duration: 2 }}
-                className="text-2xl"
-              >
-                ←
-              </motion.div>
-              <div className="text-center">
-                <div className="text-xs opacity-80">SYSTEM</div>
-                <div className="text-sm font-black">RETURN</div>
-              </div>
-            </div>
-
-            {/* Hover Particle Effect */}
-            <motion.div
-              className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100"
-              style={{
-                background: `radial-gradient(circle at 50% 50%, ${
-                  showExperienceOverlay ? 'rgba(251, 146, 60, 0.3)' :
-                  showProjectsOverlay ? 'rgba(34, 197, 94, 0.3)' :
-                  showContactOverlay ? 'rgba(244, 114, 182, 0.3)' : 'rgba(255, 255, 255, 0.3)'
-                } 0%, transparent 70%)`
-              }}
-              transition={{ duration: 0.3 }}
-            />
-          </motion.button>
+            <span className="text-xl opacity-80 transition-transform group-hover:-translate-x-0.5">←</span>
+            <span>Return</span>
+          </button>
         </motion.div>
       )}
 

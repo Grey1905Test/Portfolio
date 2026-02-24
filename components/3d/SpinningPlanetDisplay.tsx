@@ -117,9 +117,9 @@ export function SpinningPlanetDisplay({
     ? 'absolute inset-0 z-10 pointer-events-none'
     : 'fixed left-[33%] top-[53%] -translate-x-1/2 -translate-y-1/2 w-[1400px] h-[1400px] z-50 pointer-events-none';
 
-  // Embedded: flex center so the planet canvas is centered in the main canvas area
+  // Embedded: flex center + translate right so planet sits closer to the sidebar
   const canvasWrapperClass = embedded
-    ? 'absolute inset-0 flex items-center justify-center min-w-0 min-h-0'
+    ? 'absolute inset-0 flex items-center justify-center min-w-0 min-h-0 translate-x-12'
     : 'w-full h-full';
 
   // Inner: square that fits in the flex container so the WebGL canvas is centered (use size in vmin so it has definite dimensions)

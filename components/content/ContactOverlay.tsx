@@ -64,7 +64,7 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-40 h-screen grid grid-cols-1 md:grid-cols-[1fr_minmax(320px,40%)]"
+          className="fixed inset-0 z-40 h-screen grid grid-cols-1 md:grid-cols-[1fr_minmax(320px,50%)]"
         >
           {/* Left column: backdrop + planet (min-h-screen/min-w-0 so it has size on first paint) */}
           <div className="relative min-h-screen h-full w-full min-w-0 overflow-hidden">
@@ -86,7 +86,7 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
               key="contact-planet"
               modelPath="/models/planet4.glb"
               theme="pink"
-              scale={1.0}
+              scale={2}
               rotationSpeed={0.002}
               embedded
             />
