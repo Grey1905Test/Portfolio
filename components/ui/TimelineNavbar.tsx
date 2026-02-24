@@ -5,10 +5,13 @@ import { motion } from 'framer-motion';
 interface TimelineNavbarProps {
   onNavigate: (index: number) => void;
   activeSection: number;
+  overlayOpen?: boolean;
 }
 
-export default function TimelineNavbar({ onNavigate, activeSection }: TimelineNavbarProps) {
+export default function TimelineNavbar({ onNavigate, activeSection, overlayOpen = false }: TimelineNavbarProps) {
   const sections = ['Home', 'About', 'Projects', 'Experience', 'Contact'];
+
+  if (overlayOpen) return null;
   // Get color based on active section
   const getActiveColor = () => {
     switch(activeSection) {
@@ -32,128 +35,95 @@ export default function TimelineNavbar({ onNavigate, activeSection }: TimelineNa
     }
   };
 
-  const rocketPosition = (activeSection / (sections.length - 1)) * 100;
-
   return (
-    <div className="fixed top-16 left-1/2 transform -translate-x-1/2 z-40 w-full max-w-6xl px-8">
-      <nav className="relative">
-        {/* Section labels - Centered above dots */}
-        <div className="relative mb-6 h-10">
+    <div className="fixed top-35 left-0 right-0 z-50 flex justify-center w-full px-10">
+      {/* Futuristic Transparent Navigation */}
+      <motion.nav 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative rounded-2xl py-4 px-12 max-w-7xl w-full flex flex-col items-center"
+        style={{
+          background: 'transparent',
+          border: 'none',
+          backdropFilter: 'none',
+          WebkitBackdropFilter: 'none',
+        }}
+      >
+        {/* Navigation Buttons */}
+        <div className="flex justify-center items-center gap-20 w-full">
           {sections.map((section, index) => {
             const isActive = activeSection === index;
-            const position = (index / (sections.length - 1)) * 100;
             
             return (
               <motion.button
                 key={section}
-                onClick={() => onNavigate(index)}
-                className={`absolute top-0 -translate-x-1/2 text-base font-mono font-bold tracking-[0.3em] transition-all duration-300 uppercase ${
-                  isActive ? getActiveColor() : 'text-white/40 hover:text-white/80'
+                onClick={() => index !== activeSection && onNavigate(index)}
+                className={`relative py-3 px-10 rounded-xl font-mono text-sm font-bold tracking-widest uppercase transition-all duration-500 ${
+                  isActive 
+                    ? 'text-white shadow-lg' 
+                    : 'text-white/70 hover:text-white'
                 }`}
-                style={{ left: `${position}%` }}
-                whileHover={{ scale: 1.08 }}
+                whileHover={{ scale: 1.08, rotateX: 5 }}
                 whileTap={{ scale: 0.95 }}
+                style={{
+                  textShadow: isActive ? '0 0 20px rgba(255, 255, 255, 0.8)' : 'none'
+                }}
               >
-                {section}
+                {/* Active indicator with glow */}
+                {isActive && (
+                  <motion.div
+                    layoutId="activeIndicator"
+                    className="absolute inset-0 rounded-xl border border-white/60"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
+                      boxShadow: '0 0 30px rgba(255, 255, 255, 0.25), inset 0 0 30px rgba(255, 255, 255, 0.08)'
+                    }}
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+
+                {/* Button content */}
+                <span className="relative z-10">{section}</span>
               </motion.button>
             );
           })}
         </div>
 
-        {/* Progress bar container */}
-        <div className="relative h-1">
-          {/* Background line */}
-          <div className="absolute inset-0 bg-white/20 rounded-full" />
-
-          {/* Progress line (colored part) */}
+        {/* Futuristic Progress Indicator */}
+        <div className="mt-4 relative h-1 bg-white/10 rounded-full overflow-hidden w-full">
           <motion.div
-            className={`absolute left-0 top-0 h-full bg-gradient-to-r ${getProgressColor()} rounded-full shadow-lg`}
+            className="absolute left-0 top-0 h-full rounded-full"
+            style={{
+              background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.9) 100%)',
+              boxShadow: '0 0 20px rgba(255, 255, 255, 0.5)'
+            }}
             initial={{ width: '0%' }}
-            animate={{ width: `${rocketPosition}%` }}
+            animate={{ width: `${((activeSection + 1) / sections.length) * 100}%` }}
             transition={{ type: 'spring', stiffness: 100, damping: 20 }}
           />
-
-          {/* Dots for each section */}
-          {sections.map((_, index) => {
-            const dotPosition = (index / (sections.length - 1)) * 100;
-            const isPassed = index <= activeSection;
-            
-            return (
-              <motion.div
-                key={index}
-                className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full transition-colors duration-300 ${
-                  isPassed ? 'bg-white shadow-lg shadow-white/50' : 'bg-gray-600'
-                }`}
-                style={{ left: `${dotPosition}%`, marginLeft: '-6px' }}
-                whileHover={{ scale: 1.3 }}
-              />
-            );
-          })}
-
-          {/* Rocket SVG - PERFECTLY HORIZONTAL (pointing right) */}
+          
+          {/* Animated progress pulse */}
           <motion.div
-            className="absolute top-1/2 -translate-y-1/2"
-            animate={{ left: `${rocketPosition}%` }}
-            transition={{ type: 'spring', stiffness: 120, damping: 25 }}
-            style={{ marginLeft: '-24px' }}
-          >
-            <motion.div
-              animate={{
-                x: [0, 2, 0],
-              }}
-              transition={{
-                repeat: Infinity,
-                duration: 1.5,
-                ease: 'easeInOut',
-              }}
-            >
-              <svg
-                width="48"
-                height="48"
-                viewBox="0 0 512 512"
-                xmlns="http://www.w3.org/2000/svg"
-                className="drop-shadow-2xl"
-                style={{ transform: 'rotate(45deg)' }} // ROTATED -90 degrees for horizontal right
-              >
-                <g>
-                  <path
-                    fill="white"
-                    stroke="black"
-                    strokeWidth="8"
-                    d="M127.083,247.824l50.031-76.906c0,0-74.734-29.688-109.547-3.078C32.755,194.465,0.005,268.184,0.005,268.184
-                      l37.109,21.516C37.114,289.699,84.083,198.684,127.083,247.824z"
-                  />
-                  <path
-                    fill="white"
-                    stroke="black"
-                    strokeWidth="8"
-                    d="M264.177,384.918l76.906-50.031c0,0,29.688,74.734,3.078,109.547
-                      c-26.625,34.797-100.344,67.563-100.344,67.563l-21.5-37.109C222.317,474.887,313.333,427.918,264.177,384.918z"
-                  />
-                  <path
-                    fill="white"
-                    stroke="black"
-                    strokeWidth="8"
-                    d="M206.692,362.887l-13.203-13.188c-24,62.375-80.375,49.188-80.375,49.188s-13.188-56.375,49.188-80.375
-                      l-13.188-13.188c-34.797-6-79.188,35.984-86.391,76.766c-7.188,40.781-8.391,75.563-8.391,75.563s34.781-1.188,75.578-8.391
-                      S212.692,397.684,206.692,362.887z"
-                  />
-                  <path
-                    fill="white"
-                    stroke="black"
-                    strokeWidth="8"
-                    d="M505.224,6.777C450.786-18.738,312.927,28.98,236.255,130.668c-58.422,77.453-89.688,129.641-89.688,129.641
-                      l46.406,46.406l12.313,12.313l46.391,46.391c0,0,52.219-31.25,129.672-89.656C483.005,199.074,530.739,61.215,505.224,6.777z
-                      M274.63,237.371c-12.813-12.813-12.813-33.594,0-46.406s33.578-12.813,46.406,0.016c12.813,12.813,12.813,33.578,0,46.391
-                      C308.208,250.184,287.442,250.184,274.63,237.371z M351.552,160.465c-16.563-16.578-16.563-43.422,0-59.984
-                      c16.547-16.563,43.406-16.563,59.969,0s16.563,43.406,0,59.984C394.958,177.012,368.099,177.012,351.552,160.465z"
-                  />
-                </g>
-              </svg>
-            </motion.div>
-          </motion.div>
+            className="absolute top-0 h-full w-8 rounded-full"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%)',
+              left: `${((activeSection + 1) / sections.length) * 100 - 4}%`
+            }}
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+          />
         </div>
-      </nav>
+
+        {/* Scanning line effect */}
+        <motion.div
+          className="absolute top-0 left-0 w-full h-full rounded-2xl pointer-events-none"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.08) 50%, transparent 100%)'
+          }}
+          animate={{ x: ['-100%', '100%'] }}
+          transition={{ repeat: Infinity, duration: 3, ease: 'linear' }}
+        />
+      </motion.nav>
     </div>
   );
 }

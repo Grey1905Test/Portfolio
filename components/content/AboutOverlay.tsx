@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import MatrixRainEffect from '../effects/MatrixRainEffect';
 import FloatingParticles from '../effects/FloatingParticles';
+import { SpinningPlanetDisplay } from '../3d/SpinningPlanetDisplay';
 
 interface AboutOverlayProps {
   isOpen: boolean;
@@ -46,43 +47,51 @@ export default function AboutOverlay({ isOpen, onClose }: AboutOverlayProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          {/* Backdrop with animated effects */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 z-40"
-            onClick={onClose}
-          >
-            {/* Matrix Rain Effect */}
-            <MatrixRainEffect color="rgba(255, 255, 255, 0.1)" opacity={0.3} />
-            
-            {/* Floating Particles */}
-            <FloatingParticles color="rgba(255, 255, 255, 0.4)" count={30} speed={0.3} />
-            
-            {/* Animated Grid */}
-            <div 
-              className="absolute inset-0 opacity-5"
-              style={{
-                backgroundImage: `
-                  linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-                  linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)
-                `,
-                backgroundSize: '60px 60px',
-                animation: 'gridPulse 4s ease-in-out infinite',
-              }}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-40 h-screen grid grid-cols-1 md:grid-cols-[1fr_minmax(320px,50%)]"
+        >
+          {/* Left column: backdrop + planet (min-h-screen/min-w-0 so it has size on first paint) */}
+          <div className="relative min-h-screen h-full w-full min-w-0 overflow-hidden">
+            {/* Backdrop with animated effects */}
+            <div className="absolute inset-0 bg-black">
+              <MatrixRainEffect color="rgba(255, 255, 255, 0.1)" opacity={0.3} />
+              <FloatingParticles color="rgba(255, 255, 255, 0.4)" count={30} speed={0.3} />
+              <div
+                className="absolute inset-0 opacity-5"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)
+                  `,
+                  backgroundSize: '60px 60px',
+                  animation: 'gridPulse 4s ease-in-out infinite',
+                }}
+              />
+            </div>
+            {/* Planet centered in left column */}
+            <SpinningPlanetDisplay
+              key="about-planet"
+              modelPath="/models/planet3.glb"
+              theme="white"
+              scale={2}
+              rotationSpeed={0.002}
+              embedded
             />
-          </motion.div>
+          </div>
 
-          {/* Terminal Panel */}
+          {/* Right column: Terminal Panel (sidebar) */}
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="group/nav fixed right-0 top-0 h-full w-full md:w-1/2 bg-black/95 border-l-2 border-white shadow-2xl z-50 overflow-y-auto font-mono"
+            className="group/nav relative h-screen w-full min-w-0 bg-black/95 border-l-2 border-white shadow-2xl font-mono flex flex-col"
             style={{
+              overflow: 'hidden',
+              maxHeight: '100vh',
               boxShadow: '0 0 50px rgba(255, 255, 255, 0.2), inset 0 0 100px rgba(255, 255, 255, 0.02)',
             }}
           >
@@ -129,7 +138,8 @@ export default function AboutOverlay({ isOpen, onClose }: AboutOverlayProps) {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="p-8 pb-24"
+                className="p-6 pt-20 pb-24 max-h-screen"
+                style={{ height: 'calc(100vh - 120px)', overflow: 'hidden' }}
               >
                 {/* Section Title with Typing Effect */}
                 <div className="mb-8 border-l-4 border-white pl-4">
@@ -207,8 +217,30 @@ export default function AboutOverlay({ isOpen, onClose }: AboutOverlayProps) {
                 50% { opacity: 0.15; }
               }
             `}</style>
+            
+            <style jsx global>{`
+              body {
+                overflow: hidden !important;
+              }
+              * {
+                scrollbar-width: none !important;
+                -ms-overflow-style: none !important;
+              }
+              *::-webkit-scrollbar {
+                display: none !important;
+                width: 0 !important;
+                height: 0 !important;
+              }
+              .group\/nav {
+                scrollbar-width: none !important;
+                -ms-overflow-style: none !important;
+              }
+              .group\/nav::-webkit-scrollbar {
+                display: none !important;
+              }
+            `}</style>
           </motion.div>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>
   );

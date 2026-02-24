@@ -3,6 +3,7 @@
 import { Suspense, useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars, Environment } from '@react-three/drei';
+import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import TimelineNavbar from '../ui/TimelineNavbar';
 import { CentralPlanet } from '../3d/CentralPlanet';
@@ -120,7 +121,11 @@ const handleBackToSolarSystem = () => {
 
   return (
     <>
-      <TimelineNavbar onNavigate={handleNavigate} activeSection={activeSection} />
+      <TimelineNavbar
+        onNavigate={handleNavigate}
+        activeSection={activeSection}
+        overlayOpen={showExperienceOverlay || showProjectsOverlay || showAboutOverlay || showContactOverlay}
+      />
 
       {/* Scanlines and HUD - Only show when viewing experience */}
       {showExperienceOverlay && (
@@ -154,22 +159,30 @@ const handleBackToSolarSystem = () => {
         </>
       )}
 
-      {/* Back Button - Shows when viewing experience, projects, about, or contact */}
+      {/* Return to system - small, clean, futuristic */}
       {(showExperienceOverlay || showProjectsOverlay || showAboutOverlay || showContactOverlay) && (
-        <button
-          onClick={handleBackToSolarSystem}
-          className={`fixed bottom-8 left-8 z-50 px-6 py-3 border-2 ${
-            showExperienceOverlay
-              ? 'border-orange-500 text-orange-500 hover:bg-orange-500/20 hover:shadow-orange-500/50'
-              : showProjectsOverlay
-              ? 'border-green-500 text-green-500 hover:bg-green-500/20 hover:shadow-green-500/50'
-              : showContactOverlay
-              ? 'border-pink-400 text-pink-400 hover:bg-pink-400/20 hover:shadow-pink-400/50'
-              : 'border-white text-white hover:bg-white/20 hover:shadow-white/50'
-          } bg-black/80 font-mono font-semibold tracking-wider transition-all hover:shadow-lg`}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed bottom-6 left-6 z-50"
         >
-          ← RETURN_TO_SYSTEM
-        </button>
+          <button
+            onClick={handleBackToSolarSystem}
+            className={`group flex items-center gap-3 rounded-xl border-2 px-6 py-4 font-mono text-base font-semibold tracking-widest uppercase transition-all duration-200 ${
+              showExperienceOverlay
+                ? 'border-orange-400/50 bg-orange-500/5 text-orange-300 hover:border-orange-400 hover:bg-orange-500/10'
+                : showProjectsOverlay
+                ? 'border-green-400/50 bg-green-500/5 text-green-300 hover:border-green-400 hover:bg-green-500/10'
+                : showContactOverlay
+                ? 'border-pink-400/50 bg-pink-500/5 text-pink-300 hover:border-pink-400 hover:bg-pink-500/10'
+                : 'border-white/40 bg-white/5 text-white/90 hover:border-white/60 hover:bg-white/10'
+            }`}
+          >
+            <span className="text-xl opacity-80 transition-transform group-hover:-translate-x-0.5">←</span>
+            <span>Return</span>
+          </button>
+        </motion.div>
       )}
 
       {/* Experience Content Overlay */}
