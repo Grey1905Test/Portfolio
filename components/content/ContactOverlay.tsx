@@ -60,57 +60,48 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          {/* Spinning Planet Display */}
-          <SpinningPlanetDisplay 
-            key="contact-planet"
-            modelPath="/models/planet4.glb"
-            theme="pink"
-            scale={1.3}
-            rotationSpeed={0.002}
-          />
-
-          {/* Backdrop with communication effects */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black z-40"
-          >
-            {/* Communication Waves */}
-            <CommunicationWaves color="rgba(255, 105, 180, 0.5)" opacity={0.4} />
-            
-            {/* Message Particles */}
-            <MessageParticles color="rgba(255, 105, 180, 0.6)" opacity={0.3} />
-            
-            {/* Signal Grid Pattern */}
-            <div 
-              className="absolute inset-0 opacity-8"
-              style={{
-                backgroundImage: `
-                  radial-gradient(circle at center, rgba(255, 105, 180, 0.1) 1px, transparent 1px)
-                `,
-                backgroundSize: '30px 30px',
-                animation: 'signalPulse 3s ease-in-out infinite',
-              }}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-40 h-screen grid grid-cols-1 md:grid-cols-[1fr_minmax(320px,40%)]"
+        >
+          {/* Left column: backdrop + planet (min-h-screen/min-w-0 so it has size on first paint) */}
+          <div className="relative min-h-screen h-full w-full min-w-0 overflow-hidden">
+            <div className="absolute inset-0 bg-black">
+              <CommunicationWaves color="rgba(255, 105, 180, 0.5)" opacity={0.4} />
+              <MessageParticles color="rgba(255, 105, 180, 0.6)" opacity={0.3} />
+              <div
+                className="absolute inset-0 opacity-8"
+                style={{
+                  backgroundImage: `
+                    radial-gradient(circle at center, rgba(255, 105, 180, 0.1) 1px, transparent 1px)
+                  `,
+                  backgroundSize: '30px 30px',
+                  animation: 'signalPulse 3s ease-in-out infinite',
+                }}
+              />
+            </div>
+            <SpinningPlanetDisplay
+              key="contact-planet"
+              modelPath="/models/planet4.glb"
+              theme="pink"
+              scale={1.0}
+              rotationSpeed={0.002}
+              embedded
             />
-          </motion.div>
+          </div>
 
-          {/* Terminal Panel */}
+          {/* Right column: Terminal Panel (sidebar) */}
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="group/nav fixed right-0 top-0 h-screen w-full md:w-2/5 bg-black/95 border-l-2 border-pink-400 shadow-2xl z-50 font-mono"
-            style={{ 
-              overflow: 'hidden',
-              overflowX: 'hidden',
-              overflowY: 'hidden',
-              maxHeight: '100vh',
-              height: '100vh'
-            }}
+            className="group/nav relative h-screen w-full min-w-0 bg-black/95 border-l-2 border-pink-400 shadow-2xl font-mono flex flex-col"
             style={{
+              overflow: 'hidden',
+              maxHeight: '100vh',
               boxShadow: '0 0 50px rgba(255, 105, 180, 0.2), inset 0 0 100px rgba(255, 105, 180, 0.02)',
             }}
           >
@@ -219,7 +210,7 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
               }
             `}</style>
           </motion.div>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>
   );

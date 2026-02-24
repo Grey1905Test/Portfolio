@@ -121,7 +121,11 @@ const handleBackToSolarSystem = () => {
 
   return (
     <>
-      <TimelineNavbar onNavigate={handleNavigate} activeSection={activeSection} />
+      <TimelineNavbar
+        onNavigate={handleNavigate}
+        activeSection={activeSection}
+        overlayOpen={showExperienceOverlay || showProjectsOverlay || showAboutOverlay || showContactOverlay}
+      />
 
       {/* Scanlines and HUD - Only show when viewing experience */}
       {showExperienceOverlay && (

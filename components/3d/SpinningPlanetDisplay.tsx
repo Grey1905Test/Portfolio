@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, Suspense } from 'react';
+import { useRef, Suspense, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import { motion } from 'framer-motion';
@@ -63,6 +63,8 @@ interface SpinningPlanetDisplayProps {
   theme: 'white' | 'orange' | 'green' | 'pink';
   scale?: number;
   rotationSpeed?: number;
+  /** When true, fills container and centers planet (for 2-column overlay layout) */
+  embedded?: boolean;
 }
 
 const themeColors = {
@@ -96,23 +98,49 @@ export function SpinningPlanetDisplay({
   modelPath, 
   theme, 
   scale = 1.0, 
-  rotationSpeed = 0.008 
+  rotationSpeed = 0.008,
+  embedded = false,
 }: SpinningPlanetDisplayProps) {
   const colors = themeColors[theme];
+  // Delay canvas mount by one frame in embedded mode so the grid/column has layout and canvas centers correctly
+  const [canvasReady, setCanvasReady] = useState(!embedded);
+  useEffect(() => {
+    if (!embedded) return;
+    const id = requestAnimationFrame(() => setCanvasReady(true));
+    return () => cancelAnimationFrame(id);
+  }, [embedded]);
 
   // Preload the model
   useGLTF.preload(modelPath);
 
+  const wrapperClass = embedded
+    ? 'absolute inset-0 z-10 pointer-events-none'
+    : 'fixed left-[33%] top-[53%] -translate-x-1/2 -translate-y-1/2 w-[1400px] h-[1400px] z-50 pointer-events-none';
+
+  // Embedded: flex center so the planet canvas is centered in the main canvas area
+  const canvasWrapperClass = embedded
+    ? 'absolute inset-0 flex items-center justify-center min-w-0 min-h-0'
+    : 'w-full h-full';
+
+  // Inner: square that fits in the flex container so the WebGL canvas is centered (use size in vmin so it has definite dimensions)
+  const canvasInnerClass = embedded
+    ? 'aspect-square w-[75vmin] h-[75vmin] max-w-full max-h-full shrink-0'
+    : 'w-full h-full';
+
   return (
     <motion.div
-      initial={{ opacity: 0, x: -100, scale: 0.8 }}
+      initial={{ opacity: 0, x: embedded ? 0 : -100, scale: 0.8 }}
       animate={{ opacity: 1, x: 0, scale: 1 }}
-      exit={{ opacity: 0, x: -100, scale: 0.8 }}
-      transition={{ type: 'spring', damping: 25, stiffness: 200, delay: 0.3 }}
-      className="fixed left-[33%] top-[53%] -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] z-50 pointer-events-none"
+      exit={{ opacity: 0, x: embedded ? 0 : -100, scale: 0.8 }}
+      transition={{ type: 'spring', damping: 25, stiffness: 200, delay: embedded ? 0 : 0.3 }}
+      className={wrapperClass}
     >
-      <Canvas 
-        camera={{ position: [0, 0, 6], fov: 45 }}
+      <div className={canvasWrapperClass}>
+      <div className={canvasInnerClass}>
+      {canvasReady && (
+      <Canvas
+        camera={{ position: [0, 0, 9], fov: 45 }}
+        style={{ width: '100%', height: '100%', display: 'block' }}
       >
         {/* Much brighter lighting */}
         <ambientLight intensity={2.0} color={colors.ambient} />
@@ -144,16 +172,20 @@ export function SpinningPlanetDisplay({
         
         <Suspense fallback={<TestSphere />}>
           <RotatingPlanetModel 
+          
             modelPath={modelPath} 
             scale={scale} 
             rotationSpeed={rotationSpeed} 
           />
         </Suspense>
       </Canvas>
+      )}
+      </div>
+      </div>
 
       {/* Subtle glow effect matching theme */}
       <div 
-        className="absolute inset-0 rounded-full opacity-20 blur-2xl"
+        className="absolute inset-0 rounded-full opacity-20 blur-2xl pointer-events-none"
         style={{
           background: `radial-gradient(circle, ${colors.ambient}40 0%, transparent 70%)`
         }}

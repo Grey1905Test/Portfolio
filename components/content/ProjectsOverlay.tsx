@@ -48,61 +48,52 @@ export default function ProjectsOverlay({ isOpen, onClose }: ProjectsOverlayProp
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          {/* Spinning Planet Display */}
-          <SpinningPlanetDisplay 
-            key="projects-planet"
-            modelPath="/models/planet6.glb"
-            theme="green"
-            scale={1.3}
-            rotationSpeed={0.0025}
-          />
-
-          {/* Backdrop with circuit network effects */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black z-40"
-          >
-            {/* Circuit Network Effect */}
-            <CircuitNetworkEffect color="rgba(0, 255, 0, 0.5)" opacity={0.4} />
-            
-            {/* Data Flow Effect */}
-            <DataFlowEffect color="rgba(0, 255, 0, 0.7)" opacity={0.3} />
-            
-            {/* Hexagonal Grid Pattern */}
-            <div 
-              className="absolute inset-0 opacity-5"
-              style={{
-                backgroundImage: `
-                  radial-gradient(circle at 25% 25%, rgba(0, 255, 0, 0.2) 2px, transparent 2px),
-                  radial-gradient(circle at 75% 75%, rgba(0, 255, 0, 0.2) 2px, transparent 2px)
-                `,
-                backgroundSize: '60px 60px',
-                animation: 'hexPulse 6s ease-in-out infinite',
-              }}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-40 h-screen grid grid-cols-1 md:grid-cols-[1fr_minmax(320px,40%)]"
+        >
+          {/* Left column: backdrop + planet (min-h-screen/min-w-0 so it has size on first paint) */}
+          <div className="relative min-h-screen h-full w-full min-w-0 overflow-hidden">
+            <div className="absolute inset-0 bg-black">
+              <CircuitNetworkEffect color="rgba(0, 255, 0, 0.5)" opacity={0.4} />
+              <DataFlowEffect color="rgba(0, 255, 0, 0.7)" opacity={0.3} />
+              <div
+                className="absolute inset-0 opacity-5"
+                style={{
+                  backgroundImage: `
+                    radial-gradient(circle at 25% 25%, rgba(0, 255, 0, 0.2) 2px, transparent 2px),
+                    radial-gradient(circle at 75% 75%, rgba(0, 255, 0, 0.2) 2px, transparent 2px)
+                  `,
+                  backgroundSize: '60px 60px',
+                  animation: 'hexPulse 6s ease-in-out infinite',
+                }}
+              />
+            </div>
+            <SpinningPlanetDisplay
+              key="projects-planet"
+              modelPath="/models/planet6.glb"
+              theme="green"
+              scale={1.0}
+              rotationSpeed={0.0025}
+              embedded
             />
-          </motion.div>
+          </div>
 
-{/* Terminal Panel */}
-<motion.div
-  initial={{ x: '100%' }}
-  animate={{ x: 0 }}
-  exit={{ x: '100%' }}
-  transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-  className="group/nav fixed right-0 top-0 h-screen w-full md:w-2/5 bg-black/95 border-l-2 border-green-500 shadow-2xl z-50 font-mono"
-  style={{ 
-    overflow: 'hidden',
-    overflowX: 'hidden',
-    overflowY: 'hidden',
-    maxHeight: '100vh',
-    height: '100vh'
-  }}
-  style={{
-    boxShadow: '0 0 50px rgba(0, 255, 0, 0.3), inset 0 0 100px rgba(0, 255, 0, 0.05)',
-  }}
->
+          {/* Right column: Terminal Panel (sidebar) */}
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+            className="group/nav relative h-screen w-full min-w-0 bg-black/95 border-l-2 border-green-500 shadow-2xl font-mono flex flex-col"
+            style={{
+              overflow: 'hidden',
+              maxHeight: '100vh',
+              boxShadow: '0 0 50px rgba(0, 255, 0, 0.3), inset 0 0 100px rgba(0, 255, 0, 0.05)',
+            }}
+          >
   {/* Navigation Arrows - Inside panel, show on hover with blur */}
   {/* Left Arrow */}
   <button
@@ -297,7 +288,7 @@ export default function ProjectsOverlay({ isOpen, onClose }: ProjectsOverlayProp
               }
             `}</style>
           </motion.div>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>
   );
