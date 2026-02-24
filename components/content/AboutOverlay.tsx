@@ -50,9 +50,10 @@ export default function AboutOverlay({ isOpen, onClose }: AboutOverlayProps) {
         <>
           {/* Spinning Planet Display */}
           <SpinningPlanetDisplay 
+            key="about-planet"
             modelPath="/models/planet3.glb"
             theme="white"
-            scale={2.5}
+            scale={1.3}
             rotationSpeed={0.002}
           />
 

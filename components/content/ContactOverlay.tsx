@@ -63,9 +63,10 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
         <>
           {/* Spinning Planet Display */}
           <SpinningPlanetDisplay 
+            key="contact-planet"
             modelPath="/models/planet4.glb"
             theme="pink"
-            scale={2.8}
+            scale={1.3}
             rotationSpeed={0.002}
           />
 

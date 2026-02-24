@@ -51,9 +51,10 @@ export default function ProjectsOverlay({ isOpen, onClose }: ProjectsOverlayProp
         <>
           {/* Spinning Planet Display */}
           <SpinningPlanetDisplay 
+            key="projects-planet"
             modelPath="/models/planet6.glb"
             theme="green"
-            scale={2.5}
+            scale={1.3}
             rotationSpeed={0.0025}
           />
 

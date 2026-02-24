@@ -50,9 +50,10 @@ export default function ExperienceOverlay({ isOpen, onClose }: ExperienceOverlay
         <>
           {/* Spinning Planet Display */}
           <SpinningPlanetDisplay 
+            key="experience-planet"
             modelPath="/models/planet5.glb"
             theme="orange"
-            scale={3.2}
+            scale={1.3}
             rotationSpeed={0.0015}
           />
 

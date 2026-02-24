@@ -95,7 +95,7 @@ const themeColors = {
 export function SpinningPlanetDisplay({ 
   modelPath, 
   theme, 
-  scale = 2, 
+  scale = 1.0, 
   rotationSpeed = 0.008 
 }: SpinningPlanetDisplayProps) {
   const colors = themeColors[theme];
@@ -109,10 +109,10 @@ export function SpinningPlanetDisplay({
       animate={{ opacity: 1, x: 0, scale: 1 }}
       exit={{ opacity: 0, x: -100, scale: 0.8 }}
       transition={{ type: 'spring', damping: 25, stiffness: 200, delay: 0.3 }}
-      className="fixed left-[33%] top-[53%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] z-50 pointer-events-none"
+      className="fixed left-[33%] top-[53%] -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] z-50 pointer-events-none"
     >
       <Canvas 
-        camera={{ position: [0, 0, 4.5], fov: 45 }}
+        camera={{ position: [0, 0, 6], fov: 45 }}
       >
         {/* Much brighter lighting */}
         <ambientLight intensity={2.0} color={colors.ambient} />
@@ -145,7 +145,7 @@ export function SpinningPlanetDisplay({
         <Suspense fallback={<TestSphere />}>
           <RotatingPlanetModel 
             modelPath={modelPath} 
-            scale={1.0} 
+            scale={scale} 
             rotationSpeed={rotationSpeed} 
           />
         </Suspense>

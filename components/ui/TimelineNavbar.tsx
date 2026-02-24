@@ -35,15 +35,25 @@ export default function TimelineNavbar({ onNavigate, activeSection }: TimelineNa
   const rocketPosition = (activeSection / (sections.length - 1)) * 100;
 
   return (
-    <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40 w-full max-w-3xl px-8">
-      {/* Clean Transparent Navigation */}
+    <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-4xl px-8">
+      {/* Futuristic Transparent Navigation */}
       <motion.nav 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative backdrop-blur-sm bg-black/5 border border-white/5 rounded-xl py-3 px-6"
+        className="relative backdrop-blur-md bg-transparent border border-cyan-400/20 rounded-2xl py-4 px-8 shadow-2xl"
+        style={{
+          background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.03) 0%, rgba(0, 150, 255, 0.03) 50%, rgba(0, 255, 255, 0.03) 100%)',
+          boxShadow: '0 0 40px rgba(0, 255, 255, 0.1), inset 0 0 40px rgba(0, 255, 255, 0.05)',
+        }}
       >
+        {/* Futuristic Corner Accents */}
+        <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-cyan-400/40"></div>
+        <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-cyan-400/40"></div>
+        <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-cyan-400/40"></div>
+        <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-cyan-400/40"></div>
+
         {/* Navigation Buttons */}
-        <div className="flex justify-center items-center gap-6">
+        <div className="flex justify-center items-center gap-8">
           {sections.map((section, index) => {
             const isActive = activeSection === index;
             
@@ -51,21 +61,54 @@ export default function TimelineNavbar({ onNavigate, activeSection }: TimelineNa
               <motion.button
                 key={section}
                 onClick={() => onNavigate(index)}
-                className={`relative py-2 px-4 rounded-lg font-mono text-sm font-medium tracking-wide uppercase transition-all duration-300 ${
+                className={`relative py-3 px-6 rounded-xl font-mono text-sm font-bold tracking-widest uppercase transition-all duration-500 ${
                   isActive 
-                    ? 'text-cyan-300' 
-                    : 'text-white/60 hover:text-white/90'
+                    ? 'text-cyan-300 shadow-lg' 
+                    : 'text-white/70 hover:text-cyan-200'
                 }`}
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.08, rotateX: 5 }}
                 whileTap={{ scale: 0.95 }}
+                style={{
+                  textShadow: isActive ? '0 0 20px rgba(0, 255, 255, 0.8)' : 'none'
+                }}
               >
-                {/* Active indicator */}
+                {/* Active indicator with glow */}
                 {isActive && (
                   <motion.div
                     layoutId="activeIndicator"
-                    className="absolute inset-0 rounded-lg bg-cyan-400/20 border border-cyan-400/40"
+                    className="absolute inset-0 rounded-xl border border-cyan-400/60"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 150, 255, 0.1) 100%)',
+                      boxShadow: '0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 30px rgba(0, 255, 255, 0.1)'
+                    }}
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
+                )}
+
+                {/* Animated dots for active state */}
+                {isActive && (
+                  <>
+                    <motion.div
+                      className="absolute -top-1 -left-1 w-2 h-2 bg-cyan-400 rounded-full"
+                      animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                      transition={{ repeat: Infinity, duration: 2 }}
+                    />
+                    <motion.div
+                      className="absolute -top-1 -right-1 w-2 h-2 bg-cyan-400 rounded-full"
+                      animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                      transition={{ repeat: Infinity, duration: 2, delay: 0.5 }}
+                    />
+                    <motion.div
+                      className="absolute -bottom-1 -left-1 w-2 h-2 bg-cyan-400 rounded-full"
+                      animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                      transition={{ repeat: Infinity, duration: 2, delay: 1 }}
+                    />
+                    <motion.div
+                      className="absolute -bottom-1 -right-1 w-2 h-2 bg-cyan-400 rounded-full"
+                      animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                      transition={{ repeat: Infinity, duration: 2, delay: 1.5 }}
+                    />
+                  </>
                 )}
                 
                 {/* Button content */}
@@ -75,15 +118,40 @@ export default function TimelineNavbar({ onNavigate, activeSection }: TimelineNa
           })}
         </div>
 
-        {/* Simple Progress Indicator */}
-        <div className="mt-3 relative h-0.5 bg-white/10 rounded-full overflow-hidden">
+        {/* Futuristic Progress Indicator */}
+        <div className="mt-4 relative h-1 bg-white/5 rounded-full overflow-hidden">
           <motion.div
-            className="absolute left-0 top-0 h-full bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full"
+            className="absolute left-0 top-0 h-full rounded-full"
+            style={{
+              background: 'linear-gradient(90deg, rgba(0, 255, 255, 0.8) 0%, rgba(0, 150, 255, 0.8) 50%, rgba(0, 255, 255, 0.8) 100%)',
+              boxShadow: '0 0 20px rgba(0, 255, 255, 0.6)'
+            }}
             initial={{ width: '0%' }}
             animate={{ width: `${((activeSection + 1) / sections.length) * 100}%` }}
             transition={{ type: 'spring', stiffness: 100, damping: 20 }}
           />
+          
+          {/* Animated progress pulse */}
+          <motion.div
+            className="absolute top-0 h-full w-8 rounded-full"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%)',
+              left: `${((activeSection + 1) / sections.length) * 100 - 4}%`
+            }}
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+          />
         </div>
+
+        {/* Scanning line effect */}
+        <motion.div
+          className="absolute top-0 left-0 w-full h-full rounded-2xl pointer-events-none"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(0, 255, 255, 0.1) 50%, transparent 100%)'
+          }}
+          animate={{ x: ['-100%', '100%'] }}
+          transition={{ repeat: Infinity, duration: 3, ease: 'linear' }}
+        />
       </motion.nav>
     </div>
   );
