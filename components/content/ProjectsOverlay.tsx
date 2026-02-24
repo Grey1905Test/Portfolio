@@ -5,6 +5,8 @@ import { ProjectItem, projects } from '@/lib/projectsData';
 import { X, ExternalLink, Github, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
+import CircuitNetworkEffect from '../effects/CircuitNetworkEffect';
+import DataFlowEffect from '../effects/DataFlowEffect';
 
 interface ProjectsOverlayProps {
   isOpen: boolean;
@@ -46,21 +48,33 @@ export default function ProjectsOverlay({ isOpen, onClose }: ProjectsOverlayProp
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop with grid */}
+          {/* Backdrop with circuit network effects */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 z-40"
-            style={{
-              backgroundImage: `
-                linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px)
-              `,
-              backgroundSize: '50px 50px',
-            }}
+            className="fixed inset-0 bg-black/85 z-40"
             onClick={onClose}
-          />
+          >
+            {/* Circuit Network Effect */}
+            <CircuitNetworkEffect color="rgba(0, 255, 0, 0.5)" opacity={0.4} />
+            
+            {/* Data Flow Effect */}
+            <DataFlowEffect color="rgba(0, 255, 0, 0.7)" opacity={0.3} />
+            
+            {/* Hexagonal Grid Pattern */}
+            <div 
+              className="absolute inset-0 opacity-5"
+              style={{
+                backgroundImage: `
+                  radial-gradient(circle at 25% 25%, rgba(0, 255, 0, 0.2) 2px, transparent 2px),
+                  radial-gradient(circle at 75% 75%, rgba(0, 255, 0, 0.2) 2px, transparent 2px)
+                `,
+                backgroundSize: '60px 60px',
+                animation: 'hexPulse 6s ease-in-out infinite',
+              }}
+            />
+          </motion.div>
 
 {/* Terminal Panel */}
 <motion.div
@@ -255,8 +269,16 @@ export default function ProjectsOverlay({ isOpen, onClose }: ProjectsOverlayProp
 
             {/* Footer Terminal Line - Fixed at panel bottom */}
             <div className="absolute bottom-0 left-0 right-0 pt-4 border-t border-green-500/30 text-green-500/60 text-xs text-center tracking-widest bg-black/95 backdrop-blur-sm py-4">
-              RECORD_#{String(currentIndex + 1).padStart(3, '0')} :: VERIFIED :: TIMESTAMP_2026.02.09
+              RECORD_#{String(currentIndex + 1).padStart(3, '0')} :: VERIFIED :: TIMESTAMP_2026.02.23
             </div>
+
+            {/* CSS Animations */}
+            <style jsx>{`
+              @keyframes hexPulse {
+                0%, 100% { opacity: 0.05; }
+                50% { opacity: 0.15; }
+              }
+            `}</style>
           </motion.div>
         </>
       )}

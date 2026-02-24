@@ -13,9 +13,15 @@ import { generatePlanetConfigs } from '@/lib/planetConfig';
 import ExperienceOverlay from '../content/ExperienceOverlay';
 import ProjectsOverlay from '../content/ProjectsOverlay';
 import { ScanlinesOverlay } from '../effects/ScanlinesOverlay';
+import AboutOverlay from '../content/AboutOverlay';
+import ContactOverlay from '../content/ContactOverlay';
+import WhiteScanlinesOverlay from '../effects/WhiteScanlinesOverlay';
+import WhiteHUDCorners from '../effects/WhiteHUDCorners';
 import { HUDCorners } from '../effects/HUDCorners';
 import { GreenScanlinesOverlay } from '../effects/GreenScanlinesOverlay';
 import { GreenHUDCorners } from '../effects/GreenHUDCorners';
+import PinkScanlinesOverlay from '../effects/PinkScanlinesOverlay';
+import PinkHUDCorners from '../effects/PinkHUDCorners';
 
 export default function PlanetTest() {
   const [activeSection, setActiveSection] = useState(0);
@@ -25,6 +31,8 @@ export default function PlanetTest() {
   } | null>(null);
   const [showExperienceOverlay, setShowExperienceOverlay] = useState(false);
   const [showProjectsOverlay, setShowProjectsOverlay] = useState(false);
+  const [showAboutOverlay, setShowAboutOverlay] = useState(false);
+  const [showContactOverlay, setShowContactOverlay] = useState(false);
   const [freezePlanets, setFreezePlanets] = useState(false);
 
   // Create refs for each planet
@@ -45,6 +53,8 @@ export default function PlanetTest() {
   setActiveSection(index);
   setShowExperienceOverlay(false);
   setShowProjectsOverlay(false);
+  setShowAboutOverlay(false);
+  setShowContactOverlay(false);
 
     const planet = planets[index];
     
@@ -56,8 +66,10 @@ export default function PlanetTest() {
     const planetPos = planet.ref.current.userData.worldPosition;
 
     // Check which planet
+    const isAboutPlanet = index === 1;
     const isExperiencePlanet = index === 3;
     const isProjectsPlanet = index === 2;
+    const isContactPlanet = index === 4;
 
     setTargetPlanet({
       position: planetPos.clone(),
@@ -65,7 +77,12 @@ export default function PlanetTest() {
     });
 
     // Freeze planets and show overlay
-    if (isExperiencePlanet) {
+    if (isAboutPlanet) {
+      setTimeout(() => {
+        setFreezePlanets(true);
+        setShowAboutOverlay(true);
+      }, 1500);
+    } else if (isExperiencePlanet) {
       setTimeout(() => {
         setFreezePlanets(true);
         setShowExperienceOverlay(true);
@@ -74,6 +91,11 @@ export default function PlanetTest() {
       setTimeout(() => {
         setFreezePlanets(true);
         setShowProjectsOverlay(true);
+      }, 1500);
+    } else if (isContactPlanet) {
+      setTimeout(() => {
+        setFreezePlanets(true);
+        setShowContactOverlay(true);
       }, 1500);
     }
   };
@@ -89,6 +111,8 @@ export default function PlanetTest() {
 const handleBackToSolarSystem = () => {
   setShowExperienceOverlay(false);
   setShowProjectsOverlay(false);
+  setShowAboutOverlay(false);
+  setShowContactOverlay(false);
   setFreezePlanets(false);
   setTargetPlanet(null);
   setActiveSection(0);
@@ -114,11 +138,35 @@ const handleBackToSolarSystem = () => {
   </>
 )}
 
-      {/* Back Button - Shows when viewing experience or projects */}
-      {(showExperienceOverlay || showProjectsOverlay) && (
+      {/* Scanlines and HUD - Only show when viewing about */}
+      {showAboutOverlay && (
+        <>
+          <WhiteScanlinesOverlay />
+          <WhiteHUDCorners />
+        </>
+      )}
+
+      {/* Scanlines and HUD - Only show when viewing contact */}
+      {showContactOverlay && (
+        <>
+          <PinkScanlinesOverlay />
+          <PinkHUDCorners />
+        </>
+      )}
+
+      {/* Back Button - Shows when viewing experience, projects, about, or contact */}
+      {(showExperienceOverlay || showProjectsOverlay || showAboutOverlay || showContactOverlay) && (
         <button
           onClick={handleBackToSolarSystem}
-          className={`fixed bottom-8 left-8 z-50 px-6 py-3 border-2 ${showExperienceOverlay ? 'border-orange-500 text-orange-500 hover:bg-orange-500/20 hover:shadow-orange-500/50' : 'border-green-500 text-green-500 hover:bg-green-500/20 hover:shadow-green-500/50'} bg-black/80 font-mono font-semibold tracking-wider transition-all hover:shadow-lg`}
+          className={`fixed bottom-8 left-8 z-50 px-6 py-3 border-2 ${
+            showExperienceOverlay
+              ? 'border-orange-500 text-orange-500 hover:bg-orange-500/20 hover:shadow-orange-500/50'
+              : showProjectsOverlay
+              ? 'border-green-500 text-green-500 hover:bg-green-500/20 hover:shadow-green-500/50'
+              : showContactOverlay
+              ? 'border-pink-400 text-pink-400 hover:bg-pink-400/20 hover:shadow-pink-400/50'
+              : 'border-white text-white hover:bg-white/20 hover:shadow-white/50'
+          } bg-black/80 font-mono font-semibold tracking-wider transition-all hover:shadow-lg`}
         >
           ← RETURN_TO_SYSTEM
         </button>
@@ -131,9 +179,21 @@ const handleBackToSolarSystem = () => {
       />
 
       {/* Projects Content Overlay */}
-      <ProjectsOverlay 
+      <ProjectsOverlay
         isOpen={showProjectsOverlay}
-        onClose={handleCloseProjectsOverlay} 
+        onClose={handleCloseProjectsOverlay}
+      />
+
+      {/* About Content Overlay */}
+      <AboutOverlay
+        isOpen={showAboutOverlay}
+        onClose={handleBackToSolarSystem}
+      />
+
+      {/* Contact Content Overlay */}
+      <ContactOverlay
+        isOpen={showContactOverlay}
+        onClose={handleBackToSolarSystem}
       />
 
       <div className="w-full h-screen bg-black">

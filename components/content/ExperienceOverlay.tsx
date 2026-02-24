@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ExperienceItem, experiences } from '@/lib/experienceData';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import IndustrialGridEffect from '../effects/IndustrialGridEffect';
+import TechScanEffect from '../effects/TechScanEffect';
 
 interface ExperienceOverlayProps {
   isOpen: boolean;
@@ -45,21 +47,35 @@ export default function ExperienceOverlay({ isOpen, onClose }: ExperienceOverlay
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop with grid */}
+          {/* Backdrop with industrial effects */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 z-40"
-            style={{
-              backgroundImage: `
-                linear-gradient(rgba(255, 107, 53, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 107, 53, 0.1) 1px, transparent 1px)
-              `,
-              backgroundSize: '50px 50px',
-            }}
+            className="fixed inset-0 bg-black/85 z-40"
             onClick={onClose}
-          />
+          >
+            {/* Industrial Grid Effect */}
+            <IndustrialGridEffect color="rgba(255, 107, 53, 0.4)" opacity={0.3} />
+            
+            {/* Tech Scan Effect */}
+            <TechScanEffect color="rgba(255, 107, 53, 0.6)" opacity={0.4} />
+            
+            {/* Animated Warning Stripes */}
+            <div 
+              className="absolute inset-0 opacity-10"
+              style={{
+                backgroundImage: `repeating-linear-gradient(
+                  45deg,
+                  transparent,
+                  transparent 20px,
+                  rgba(255, 107, 53, 0.2) 20px,
+                  rgba(255, 107, 53, 0.2) 40px
+                )`,
+                animation: 'warningStripes 8s linear infinite',
+              }}
+            />
+          </motion.div>
 
           {/* Terminal Panel */}
           <motion.div
@@ -209,8 +225,16 @@ export default function ExperienceOverlay({ isOpen, onClose }: ExperienceOverlay
 
             {/* Footer Terminal Line - Fixed at panel bottom */}
             <div className="absolute bottom-0 left-0 right-0 pt-4 border-t border-orange-500/30 text-orange-500/60 text-xs text-center tracking-widest bg-black/95 backdrop-blur-sm py-4">
-              RECORD_#{String(currentIndex + 1).padStart(3, '0')} :: VERIFIED :: TIMESTAMP_2026.02.05
+              RECORD_#{String(currentIndex + 1).padStart(3, '0')} :: VERIFIED :: TIMESTAMP_2026.02.23
             </div>
+
+            {/* CSS Animations */}
+            <style jsx>{`
+              @keyframes warningStripes {
+                0% { transform: translateX(-40px); }
+                100% { transform: translateX(0); }
+              }
+            `}</style>
           </motion.div>
         </>
       )}
