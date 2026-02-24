@@ -6,6 +6,7 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import IndustrialGridEffect from '../effects/IndustrialGridEffect';
 import TechScanEffect from '../effects/TechScanEffect';
+import { SpinningPlanetDisplay } from '../3d/SpinningPlanetDisplay';
 
 interface ExperienceOverlayProps {
   isOpen: boolean;
@@ -47,13 +48,20 @@ export default function ExperienceOverlay({ isOpen, onClose }: ExperienceOverlay
     <AnimatePresence>
       {isOpen && (
         <>
+          {/* Spinning Planet Display */}
+          <SpinningPlanetDisplay 
+            modelPath="/models/planet5.glb"
+            theme="orange"
+            scale={3.2}
+            rotationSpeed={0.0015}
+          />
+
           {/* Backdrop with industrial effects */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/85 z-40"
-            onClick={onClose}
+            className="fixed inset-0 bg-black z-40"
           >
             {/* Industrial Grid Effect */}
             <IndustrialGridEffect color="rgba(255, 107, 53, 0.4)" opacity={0.3} />
@@ -83,7 +91,14 @@ export default function ExperienceOverlay({ isOpen, onClose }: ExperienceOverlay
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="group/nav fixed right-0 top-0 h-full w-full md:w-1/2 bg-black/95 border-l-2 border-orange-500 shadow-2xl z-50 overflow-y-auto font-mono"
+            className="group/nav fixed right-0 top-0 h-screen w-full md:w-2/5 bg-black/95 border-l-2 border-orange-500 shadow-2xl z-50 font-mono"
+            style={{ 
+              overflow: 'hidden',
+              overflowX: 'hidden',
+              overflowY: 'hidden',
+              maxHeight: '100vh',
+              height: '100vh'
+            }}
             style={{
               boxShadow: '0 0 50px rgba(255, 107, 53, 0.3), inset 0 0 100px rgba(255, 107, 53, 0.05)',
             }}
@@ -133,7 +148,8 @@ export default function ExperienceOverlay({ isOpen, onClose }: ExperienceOverlay
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="p-8 pb-24"
+                className="p-6 pt-20 pb-24 max-h-screen"
+                style={{ height: 'calc(100vh - 120px)', overflow: 'hidden' }}
               >
                 {/* Company Name with Typing Effect */}
                 <div className="mb-8 border-l-4 border-orange-500 pl-4">

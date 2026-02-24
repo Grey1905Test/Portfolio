@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, ExternalLink, Mail, Phone } from 'lucide-rea
 import { useState, useEffect } from 'react';
 import CommunicationWaves from '../effects/CommunicationWaves';
 import MessageParticles from '../effects/MessageParticles';
+import { SpinningPlanetDisplay } from '../3d/SpinningPlanetDisplay';
 
 interface ContactOverlayProps {
   isOpen: boolean;
@@ -60,13 +61,20 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
     <AnimatePresence>
       {isOpen && (
         <>
+          {/* Spinning Planet Display */}
+          <SpinningPlanetDisplay 
+            modelPath="/models/planet4.glb"
+            theme="pink"
+            scale={2.8}
+            rotationSpeed={0.002}
+          />
+
           {/* Backdrop with communication effects */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/85 z-40"
-            onClick={onClose}
+            className="fixed inset-0 bg-black z-40"
           >
             {/* Communication Waves */}
             <CommunicationWaves color="rgba(255, 105, 180, 0.5)" opacity={0.4} />
@@ -93,7 +101,14 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="group/nav fixed right-0 top-0 h-full w-full md:w-1/2 bg-black/95 border-l-2 border-pink-400 shadow-2xl z-50 overflow-y-auto font-mono"
+            className="group/nav fixed right-0 top-0 h-screen w-full md:w-2/5 bg-black/95 border-l-2 border-pink-400 shadow-2xl z-50 font-mono"
+            style={{ 
+              overflow: 'hidden',
+              overflowX: 'hidden',
+              overflowY: 'hidden',
+              maxHeight: '100vh',
+              height: '100vh'
+            }}
             style={{
               boxShadow: '0 0 50px rgba(255, 105, 180, 0.2), inset 0 0 100px rgba(255, 105, 180, 0.02)',
             }}
@@ -141,7 +156,8 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="p-8 pb-24"
+                className="p-6 pt-20 pb-24 max-h-screen"
+                style={{ height: 'calc(100vh - 120px)', overflow: 'hidden' }}
               >
                 {/* Section Title with Typing Effect */}
                 <div className="mb-8 border-l-4 border-pink-400 pl-4">
