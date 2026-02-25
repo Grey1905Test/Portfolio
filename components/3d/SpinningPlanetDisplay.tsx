@@ -31,25 +31,13 @@ function TestSphere() {
 
 function RotatingPlanetModel({ modelPath, scale = 2, rotationSpeed = 0.008 }: RotatingPlanetModelProps) {
   const planetRef = useRef<THREE.Group>(null);
-  const { scene, error } = useGLTF(modelPath);
+  const { scene } = useGLTF(modelPath);
 
   useFrame(() => {
     if (planetRef.current) {
       planetRef.current.rotation.y += rotationSpeed;
     }
   });
-
-  // Fallback sphere if model fails to load
-  if (error) {
-    return (
-      <group ref={planetRef}>
-        <mesh>
-          <sphereGeometry args={[1, 32, 32]} />
-          <meshStandardMaterial color="#4a5568" />
-        </mesh>
-      </group>
-    );
-  }
 
   return (
     <group ref={planetRef}>
