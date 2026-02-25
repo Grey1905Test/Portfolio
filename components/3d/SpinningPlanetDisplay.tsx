@@ -124,7 +124,7 @@ export function SpinningPlanetDisplay({
 
   // Inner: square that fits in the flex container so the WebGL canvas is centered (use size in vmin so it has definite dimensions)
   const canvasInnerClass = embedded
-    ? 'aspect-square w-[75vmin] h-[75vmin] max-w-full max-h-full shrink-0'
+    ? 'aspect-square w-[70vmin] h-[70vmin] max-w-full max-h-full shrink-0'
     : 'w-full h-full';
 
   return (

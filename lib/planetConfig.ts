@@ -10,15 +10,6 @@ export interface PlanetConfig {
 
 export const generatePlanetConfigs = (): PlanetConfig[] => [
   {
-    model: '/models/planet2.glb',
-    radius: 8,
-    speed: 0.0008,
-    size: 1,
-    label: 'Home',
-    startAngle: Math.random() * Math.PI * 2,
-    tilt: (Math.random() - 0.5) * 0.3,
-  },
-  {
     model: '/models/planet3.glb',
     radius: 12,
     speed: 0.0006,

@@ -36,9 +36,9 @@ export default function PlanetTest() {
   const [showContactOverlay, setShowContactOverlay] = useState(false);
   const [freezePlanets, setFreezePlanets] = useState(false);
 
-  // Create refs for each planet
+  // Create refs for each planet (4 orbiting: About, Projects, Experience, Contact; Home has no planet)
   const planetRefs = useMemo(
-    () => Array.from({ length: 5 }, () => ({ current: new THREE.Group() })),
+    () => Array.from({ length: 4 }, () => ({ current: new THREE.Group() })),
     []
   );
 
@@ -51,25 +51,32 @@ export default function PlanetTest() {
   }, [planetRefs]);
 
   const handleNavigate = (index: number) => {
-  setActiveSection(index);
-  setShowExperienceOverlay(false);
-  setShowProjectsOverlay(false);
-  setShowAboutOverlay(false);
-  setShowContactOverlay(false);
+    setActiveSection(index);
+    setShowExperienceOverlay(false);
+    setShowProjectsOverlay(false);
+    setShowAboutOverlay(false);
+    setShowContactOverlay(false);
 
-    const planet = planets[index];
-    
-    // Check if ref is initialized and has worldPosition
+    // Home (index 0) has no orbiting planet — reset to default view
+    if (index === 0) {
+      setTargetPlanet(null);
+      setFreezePlanets(false);
+      return;
+    }
+
+    // Map nav index to planet index (1→0, 2→1, 3→2, 4→3)
+    const planetIndex = index - 1;
+    const planet = planets[planetIndex];
+
     if (!planet.ref.current || !planet.ref.current.userData.worldPosition) {
       return;
     }
-    
+
     const planetPos = planet.ref.current.userData.worldPosition;
 
-    // Check which planet
     const isAboutPlanet = index === 1;
-    const isExperiencePlanet = index === 3;
     const isProjectsPlanet = index === 2;
+    const isExperiencePlanet = index === 3;
     const isContactPlanet = index === 4;
 
     setTargetPlanet({
@@ -77,7 +84,6 @@ export default function PlanetTest() {
       radius: planet.radius,
     });
 
-    // Freeze planets and show overlay
     if (isAboutPlanet) {
       setTimeout(() => {
         setFreezePlanets(true);
@@ -109,15 +115,15 @@ export default function PlanetTest() {
     setShowProjectsOverlay(false);
   };
 
-const handleBackToSolarSystem = () => {
-  setShowExperienceOverlay(false);
-  setShowProjectsOverlay(false);
-  setShowAboutOverlay(false);
-  setShowContactOverlay(false);
-  setFreezePlanets(false);
-  setTargetPlanet(null);
-  setActiveSection(0);
-};
+  const handleBackToSolarSystem = () => {
+    setShowExperienceOverlay(false);
+    setShowProjectsOverlay(false);
+    setShowAboutOverlay(false);
+    setShowContactOverlay(false);
+    setFreezePlanets(false);
+    setTargetPlanet(null);
+    setActiveSection(0); // Home
+  };
 
   return (
     <>
@@ -165,11 +171,11 @@ const handleBackToSolarSystem = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed bottom-6 left-6 z-50"
+          className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50"
         >
           <button
             onClick={handleBackToSolarSystem}
-            className={`group flex items-center gap-3 rounded-xl border-2 px-6 py-4 font-mono text-base font-semibold tracking-widest uppercase transition-all duration-200 ${
+            className={`group flex items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl border-2 px-4 py-3 sm:px-6 sm:py-4 font-mono text-sm sm:text-base font-semibold tracking-wider sm:tracking-widest uppercase transition-all duration-200 ${
               showExperienceOverlay
                 ? 'border-orange-400/50 bg-orange-500/5 text-orange-300 hover:border-orange-400 hover:bg-orange-500/10'
                 : showProjectsOverlay
