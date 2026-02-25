@@ -89,31 +89,6 @@ export default function TimelineNavbar({ onNavigate, activeSection, overlayOpen 
           })}
         </div>
 
-        {/* Futuristic Progress Indicator */}
-        <div className="mt-4 relative h-1 bg-white/10 rounded-full overflow-hidden w-full">
-          <motion.div
-            className="absolute left-0 top-0 h-full rounded-full"
-            style={{
-              background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.9) 100%)',
-              boxShadow: '0 0 20px rgba(255, 255, 255, 0.5)'
-            }}
-            initial={{ width: '0%' }}
-            animate={{ width: `${((activeSection + 1) / sections.length) * 100}%` }}
-            transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-          />
-          
-          {/* Animated progress pulse */}
-          <motion.div
-            className="absolute top-0 h-full w-8 rounded-full"
-            style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%)',
-              left: `${((activeSection + 1) / sections.length) * 100 - 4}%`
-            }}
-            animate={{ opacity: [0, 1, 0] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-          />
-        </div>
-
         {/* Scanning line effect */}
         <motion.div
           className="absolute top-0 left-0 w-full h-full rounded-2xl pointer-events-none"
