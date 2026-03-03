@@ -12,9 +12,9 @@ interface PlanetParticleTrailProps {
 
 export function PlanetParticleTrail({ isHovered, color, count = 50 }: PlanetParticleTrailProps) {
   const particlesRef = useRef<THREE.Points>(null);
-  const particlePositions = useRef<Float32Array>();
-  const particleVelocities = useRef<Float32Array>();
-  const particleLifetimes = useRef<Float32Array>();
+  const particlePositions = useRef<Float32Array | null>(null);
+  const particleVelocities = useRef<Float32Array | null>(null);
+  const particleLifetimes = useRef<Float32Array | null>(null);
 
   const { geometry, material } = useMemo(() => {
     const positions = new Float32Array(count * 3);
@@ -58,11 +58,11 @@ export function PlanetParticleTrail({ isHovered, color, count = 50 }: PlanetPart
 
   useFrame((state, delta) => {
     if (!particlesRef.current || !isHovered) return;
-    if (!particlePositions.current || !particleVelocities.current || !particleLifetimes.current) return;
-
     const positions = particlePositions.current;
     const velocities = particleVelocities.current;
     const lifetimes = particleLifetimes.current;
+    
+    if (!positions || !velocities || !lifetimes) return;
 
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
