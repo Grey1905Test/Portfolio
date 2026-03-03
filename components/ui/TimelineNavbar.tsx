@@ -88,16 +88,6 @@ export default function TimelineNavbar({ onNavigate, activeSection, overlayOpen 
             );
           })}
         </div>
-
-        {/* Scanning line effect */}
-        <motion.div
-          className="absolute top-0 left-0 w-full h-full rounded-2xl pointer-events-none"
-          style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.08) 50%, transparent 100%)'
-          }}
-          animate={{ x: ['-100%', '100%'] }}
-          transition={{ repeat: Infinity, duration: 3, ease: 'linear' }}
-        />
       </motion.nav>
     </div>
   );

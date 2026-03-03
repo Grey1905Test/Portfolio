@@ -23,6 +23,10 @@ import { GreenScanlinesOverlay } from '../effects/GreenScanlinesOverlay';
 import { GreenHUDCorners } from '../effects/GreenHUDCorners';
 import PinkScanlinesOverlay from '../effects/PinkScanlinesOverlay';
 import PinkHUDCorners from '../effects/PinkHUDCorners';
+import LoadingScreen from '../ui/LoadingScreen';
+
+// Planet colors for particle trails
+const PLANET_COLORS = ['#FFFFFF', '#00FF00', '#FF6B35', '#FF69B4'];
 
 export default function PlanetTest() {
   const [activeSection, setActiveSection] = useState(0);
@@ -35,6 +39,7 @@ export default function PlanetTest() {
   const [showAboutOverlay, setShowAboutOverlay] = useState(false);
   const [showContactOverlay, setShowContactOverlay] = useState(false);
   const [freezePlanets, setFreezePlanets] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Create refs for each planet (4 orbiting: About, Projects, Experience, Contact; Home has no planet)
   const planetRefs = useMemo(
@@ -88,23 +93,30 @@ export default function PlanetTest() {
       setTimeout(() => {
         setFreezePlanets(true);
         setShowAboutOverlay(true);
-      }, 1500);
+      }, 3200); // Increased from 1800ms to 3200ms to match slower zoom
     } else if (isExperiencePlanet) {
       setTimeout(() => {
         setFreezePlanets(true);
         setShowExperienceOverlay(true);
-      }, 1500);
+      }, 3200);
     } else if (isProjectsPlanet) {
       setTimeout(() => {
         setFreezePlanets(true);
         setShowProjectsOverlay(true);
-      }, 1500);
+      }, 3200);
     } else if (isContactPlanet) {
       setTimeout(() => {
         setFreezePlanets(true);
         setShowContactOverlay(true);
-      }, 1500);
+      }, 3200);
     }
+  };
+
+  // Handle planet clicks
+  const handlePlanetClick = (planetIndex: number) => {
+    // Map planet index to nav index (0→1, 1→2, 2→3, 3→4)
+    const navIndex = planetIndex + 1;
+    handleNavigate(navIndex);
   };
 
   const handleCloseOverlay = () => {
@@ -127,11 +139,16 @@ export default function PlanetTest() {
 
   return (
     <>
-      <TimelineNavbar
-        onNavigate={handleNavigate}
-        activeSection={activeSection}
-        overlayOpen={showExperienceOverlay || showProjectsOverlay || showAboutOverlay || showContactOverlay}
-      />
+      {/* Loading Screen */}
+      <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
+
+      {!isLoading && (
+        <>
+          <TimelineNavbar
+            onNavigate={handleNavigate}
+            activeSection={activeSection}
+            overlayOpen={showExperienceOverlay || showProjectsOverlay || showAboutOverlay || showContactOverlay}
+          />
 
       {/* Scanlines and HUD - Only show when viewing experience */}
       {showExperienceOverlay && (
@@ -240,6 +257,8 @@ export default function PlanetTest() {
                 tilt={planet.tilt}
                 planetRef={planet.ref}
                 freeze={freezePlanets}
+                onClick={() => handlePlanetClick(index)}
+                particleColor={PLANET_COLORS[index]}
               />
             ))}
 
@@ -255,6 +274,8 @@ export default function PlanetTest() {
           />
         </Canvas>
       </div>
+        </>
+      )}
     </>
   );
 }

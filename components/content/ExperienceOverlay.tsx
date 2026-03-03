@@ -65,8 +65,8 @@ function TypewriterEntry({ text, index, trigger }: { text: string; index: number
   }, [text, index, trigger]);
 
   return (
-    <div className="flex gap-3 text-orange-100/80 text-sm leading-relaxed">
-      <span className="text-orange-500 mt-1 flex-shrink-0">[{index + 1}]</span>
+    <div className="flex gap-3 text-orange-100/90 text-base leading-relaxed">
+      <span className="text-orange-500 mt-1 flex-shrink-0 font-bold">[{index + 1}]</span>
       <span>
         {displayed}
         {displayed.length < text.length && (
@@ -80,7 +80,7 @@ function TypewriterEntry({ text, index, trigger }: { text: string; index: number
 // ─── ETL Pipeline Visualization (Datanimbus) ───────────────────────────────────
 function PipelineViz() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dims, setDims] = useState({ w: 400, h: 160 });
+  const [dims, setDims] = useState({ w: 400, h: 200 });
   const [packets, setPackets] = useState<{ id: number; edge: number; progress: number; type: 'data' | 'snapshot' | 'error' }[]>([]);
   const [snapshotPulse, setSnapshotPulse] = useState(false);
   const packetId = useRef(0);
@@ -147,8 +147,8 @@ function PipelineViz() {
   }, []);
 
   const { w, h } = dims;
-  const NW = Math.max(w * 0.1, 58);
-  const NH = 30;
+  const NW = Math.max(w * 0.11, 68);
+  const NH = 38;
 
   function getPos(id: string) {
     const n = NODES.find((n) => n.id === id)!;
@@ -166,11 +166,11 @@ function PipelineViz() {
       <svg width="100%" height="100%" style={{ overflow: 'visible' }}>
         <defs>
           <filter id="pg2">
-            <feGaussianBlur stdDeviation="2" result="b" />
+            <feGaussianBlur stdDeviation="2.5" result="b" />
             <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
           <filter id="snapglow">
-            <feGaussianBlur stdDeviation="5" result="b" />
+            <feGaussianBlur stdDeviation="6" result="b" />
             <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
         </defs>
@@ -182,9 +182,9 @@ function PipelineViz() {
             <line
               key={i}
               x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-              stroke="rgba(255,107,53,0.25)"
-              strokeWidth="1.5"
-              strokeDasharray="4 5"
+              stroke="rgba(255,107,53,0.3)"
+              strokeWidth="2"
+              strokeDasharray="5 6"
             />
           );
         })}
@@ -198,8 +198,8 @@ function PipelineViz() {
           const { fill, glow } = packetColor(p.type);
           return (
             <g key={p.id} filter="url(#pg2)">
-              <circle cx={px} cy={py} r={3.5} fill={fill} />
-              <circle cx={px} cy={py} r={7} fill={glow} />
+              <circle cx={px} cy={py} r={4} fill={fill} />
+              <circle cx={px} cy={py} r={8} fill={glow} />
             </g>
           );
         })}
@@ -217,14 +217,14 @@ function PipelineViz() {
                 height={NH}
                 rx={3}
                 fill={glowing ? 'rgba(120,200,255,0.15)' : 'rgba(255,107,53,0.07)'}
-                stroke={glowing ? 'rgba(120,200,255,0.9)' : 'rgba(255,107,53,0.65)'}
-                strokeWidth={glowing ? 2 : 1.5}
+                stroke={glowing ? 'rgba(120,200,255,0.9)' : 'rgba(255,107,53,0.7)'}
+                strokeWidth={glowing ? 2.5 : 2}
                 style={{ transition: 'all 0.3s' }}
               />
-              <text x={x} y={y - 5} textAnchor="middle" fill={glowing ? 'rgba(120,200,255,1)' : 'rgba(255,150,80,1)'} fontSize={8} fontFamily="monospace" fontWeight="bold" letterSpacing="0.5">
+              <text x={x} y={y - 6} textAnchor="middle" fill={glowing ? 'rgba(120,200,255,1)' : 'rgba(255,150,80,1)'} fontSize={10} fontFamily="monospace" fontWeight="bold" letterSpacing="0.8">
                 {node.label}
               </text>
-              <text x={x} y={y + 7} textAnchor="middle" fill="rgba(255,107,53,0.45)" fontSize={6.5} fontFamily="monospace">
+              <text x={x} y={y + 9} textAnchor="middle" fill="rgba(255,107,53,0.5)" fontSize={8} fontFamily="monospace">
                 {node.sub}
               </text>
             </g>
@@ -238,7 +238,7 @@ function PipelineViz() {
 // ─── API Network Visualization (QuicHub: payment gateways → central hub) ─────
 function ApiNetworkViz() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dims, setDims] = useState({ w: 400, h: 160 });
+  const [dims, setDims] = useState({ w: 400, h: 200 });
   const [pulses, setPulses] = useState<{ id: number; node: number; progress: number; success: boolean }[]>([]);
   const pulseId = useRef(0);
 
@@ -287,20 +287,20 @@ function ApiNetworkViz() {
   const { w, h } = dims;
   const cx = w / 2;
   const cy = h / 2;
-  const radius = Math.min(w, h) * 0.36;
-  const nodeW = Math.max(w * 0.13, 58);
-  const nodeH = 26;
+  const radius = Math.min(w, h) * 0.38;
+  const nodeW = Math.max(w * 0.14, 65);
+  const nodeH = 32;
 
   return (
     <div ref={containerRef} className="absolute inset-0">
       <svg width="100%" height="100%" style={{ overflow: 'visible' }}>
         <defs>
           <filter id="ag">
-            <feGaussianBlur stdDeviation="2.5" result="b" />
+            <feGaussianBlur stdDeviation="3" result="b" />
             <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
           <radialGradient id="hubGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(255,107,53,0.3)" />
+            <stop offset="0%" stopColor="rgba(255,107,53,0.35)" />
             <stop offset="100%" stopColor="rgba(255,107,53,0.05)" />
           </radialGradient>
         </defs>
@@ -312,9 +312,9 @@ function ApiNetworkViz() {
             <line
               key={i}
               x1={cx} y1={cy} x2={nx} y2={ny}
-              stroke="rgba(255,107,53,0.2)"
-              strokeWidth="1"
-              strokeDasharray="3 4"
+              stroke="rgba(255,107,53,0.25)"
+              strokeWidth="1.5"
+              strokeDasharray="4 5"
             />
           );
         })}
@@ -329,15 +329,15 @@ function ApiNetworkViz() {
           const glowColor = p.success ? 'rgba(100,255,180,0.2)' : 'rgba(255,80,80,0.2)';
           return (
             <g key={p.id} filter="url(#ag)">
-              <circle cx={px} cy={py} r={3} fill={color} />
-              <circle cx={px} cy={py} r={6} fill={glowColor} />
+              <circle cx={px} cy={py} r={4} fill={color} />
+              <circle cx={px} cy={py} r={7} fill={glowColor} />
             </g>
           );
         })}
-        <circle cx={cx} cy={cy} r={28} fill="url(#hubGrad)" stroke="rgba(255,107,53,0.8)" strokeWidth="2" filter="url(#ag)" />
-        <text x={cx} y={cy - 5} textAnchor="middle" fill="rgba(255,150,80,1)" fontSize={8} fontFamily="monospace" fontWeight="bold" letterSpacing="1">API</text>
-        <text x={cx} y={cy + 7} textAnchor="middle" fill="rgba(255,150,80,1)" fontSize={8} fontFamily="monospace" fontWeight="bold" letterSpacing="1">HUB</text>
-        <text x={cx} y={cy + 18} textAnchor="middle" fill="rgba(255,107,53,0.5)" fontSize={6.5} fontFamily="monospace">10k+ tx/mo</text>
+        <circle cx={cx} cy={cy} r={32} fill="url(#hubGrad)" stroke="rgba(255,107,53,0.85)" strokeWidth="2.5" filter="url(#ag)" />
+        <text x={cx} y={cy - 6} textAnchor="middle" fill="rgba(255,150,80,1)" fontSize={10} fontFamily="monospace" fontWeight="bold" letterSpacing="1.2">API</text>
+        <text x={cx} y={cy + 8} textAnchor="middle" fill="rgba(255,150,80,1)" fontSize={10} fontFamily="monospace" fontWeight="bold" letterSpacing="1.2">HUB</text>
+        <text x={cx} y={cy + 20} textAnchor="middle" fill="rgba(255,107,53,0.6)" fontSize={8} fontFamily="monospace">10k+ tx/mo</text>
         {OUTER_NODES.map((node, i) => {
           const rad = (node.angle * Math.PI) / 180;
           const nx = cx + Math.cos(rad) * radius;
@@ -348,11 +348,11 @@ function ApiNetworkViz() {
                 x={nx - nodeW / 2} y={ny - nodeH / 2}
                 width={nodeW} height={nodeH}
                 rx={2}
-                fill="rgba(255,107,53,0.07)"
-                stroke="rgba(255,107,53,0.55)"
-                strokeWidth="1.2"
+                fill="rgba(255,107,53,0.08)"
+                stroke="rgba(255,107,53,0.65)"
+                strokeWidth="1.8"
               />
-              <text x={nx} y={ny + 4} textAnchor="middle" fill="rgba(255,150,80,0.9)" fontSize={7.5} fontFamily="monospace" fontWeight="bold" letterSpacing="0.5">
+              <text x={nx} y={ny + 5} textAnchor="middle" fill="rgba(255,150,80,0.95)" fontSize={9} fontFamily="monospace" fontWeight="bold" letterSpacing="0.6">
                 {node.label}
               </text>
             </g>
@@ -412,54 +412,54 @@ function CacheMonitorViz() {
   const hitColor = (hit: boolean) => (hit ? 'rgba(100,220,160,0.85)' : 'rgba(255,80,80,0.7)');
 
   return (
-    <div className="absolute inset-0 p-3 pt-6 flex gap-3 font-mono">
-      <div className="flex-1 flex flex-col gap-1">
-        <div className="text-orange-500/50 text-[8px] tracking-widest mb-1">REDIS_CACHE.GRID</div>
+    <div className="absolute inset-0 p-4 pt-7 flex gap-4 font-mono">
+      <div className="flex-1 flex flex-col gap-2">
+        <div className="text-orange-500/50 text-[10px] tracking-widest mb-1">REDIS_CACHE.GRID</div>
         <div className="flex-1 grid grid-cols-12 gap-[2px] content-start">
           {cacheHits.slice(-48).map((h) => (
             <div
               key={h.id}
               className="w-full aspect-square rounded-[1px] transition-colors duration-200"
-              style={{ backgroundColor: hitColor(h.hit), boxShadow: `0 0 3px ${hitColor(h.hit)}` }}
+              style={{ backgroundColor: hitColor(h.hit), boxShadow: `0 0 4px ${hitColor(h.hit)}` }}
             />
           ))}
         </div>
-        <div className="flex gap-3 mt-1">
-          <span className="text-[8px] flex items-center gap-1" style={{ color: 'rgba(100,220,160,0.85)' }}>
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-400" /> HIT
+        <div className="flex gap-4 mt-1">
+          <span className="text-[10px] flex items-center gap-1.5" style={{ color: 'rgba(100,220,160,0.85)' }}>
+            <span className="inline-block w-2 h-2 rounded-full bg-green-400" /> HIT
           </span>
-          <span className="text-[8px] flex items-center gap-1 text-red-400">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-400" /> MISS
+          <span className="text-[10px] flex items-center gap-1.5 text-red-400">
+            <span className="inline-block w-2 h-2 rounded-full bg-red-400" /> MISS
           </span>
         </div>
       </div>
-      <div className="w-[48%] flex flex-col gap-2">
-        <div className="grid grid-cols-2 gap-1.5">
-          <div className="border border-orange-500/30 bg-orange-500/5 p-1.5">
-            <div className="text-orange-500/50 text-[7px] tracking-widest">RESPONSE</div>
-            <div className="text-green-400 text-sm font-bold tabular-nums">{Math.round(responseTime)}ms</div>
+      <div className="w-[48%] flex flex-col gap-2.5">
+        <div className="grid grid-cols-2 gap-2">
+          <div className="border border-orange-500/30 bg-orange-500/5 p-2">
+            <div className="text-orange-500/50 text-[9px] tracking-widest">RESPONSE</div>
+            <div className="text-green-400 text-lg font-bold tabular-nums">{Math.round(responseTime)}ms</div>
           </div>
-          <div className="border border-orange-500/30 bg-orange-500/5 p-1.5">
-            <div className="text-orange-500/50 text-[7px] tracking-widest">ACTIVE</div>
-            <div className="text-orange-300 text-sm font-bold tabular-nums">{activeUsers}</div>
+          <div className="border border-orange-500/30 bg-orange-500/5 p-2">
+            <div className="text-orange-500/50 text-[9px] tracking-widest">ACTIVE</div>
+            <div className="text-orange-300 text-lg font-bold tabular-nums">{activeUsers}</div>
           </div>
-          <div className="border border-orange-500/30 bg-orange-500/5 p-1.5 col-span-2">
-            <div className="text-orange-500/50 text-[7px] tracking-widest mb-0.5">CACHE HIT RATE</div>
-            <div className="w-full h-1.5 bg-orange-500/10 rounded-full overflow-hidden">
+          <div className="border border-orange-500/30 bg-orange-500/5 p-2 col-span-2">
+            <div className="text-orange-500/50 text-[9px] tracking-widest mb-1">CACHE HIT RATE</div>
+            <div className="w-full h-2 bg-orange-500/10 rounded-full overflow-hidden">
               <div className="h-full bg-green-400/70 rounded-full" style={{ width: '65%' }} />
             </div>
-            <div className="text-green-400 text-[9px] mt-0.5">65% — 35% DB BYPASS</div>
+            <div className="text-green-400 text-[10px] mt-1">65% — 35% DB BYPASS</div>
           </div>
         </div>
-        <div className="flex-1 border border-orange-500/20 bg-black/30 p-1.5 overflow-hidden">
-          <div className="text-orange-500/40 text-[7px] tracking-widest mb-1">WS_EVENT.LOG</div>
-          <div className="space-y-0.5">
+        <div className="flex-1 border border-orange-500/20 bg-black/30 p-2 overflow-hidden">
+          <div className="text-orange-500/40 text-[9px] tracking-widest mb-1.5">WS_EVENT.LOG</div>
+          <div className="space-y-1">
             {wsEvents.map((e, i) => (
               <motion.div
                 key={e.id}
                 initial={{ opacity: 0, x: 6 }}
                 animate={{ opacity: 1 - i * 0.15, x: 0 }}
-                className="text-[7.5px] flex items-center gap-1"
+                className="text-[9px] flex items-center gap-1.5"
                 style={{ color: `rgba(255,150,80,${0.9 - i * 0.15})` }}
               >
                 <span className="text-green-400/70">›</span>
@@ -508,10 +508,17 @@ export default function ExperienceOverlay({ isOpen, onClose }: ExperienceOverlay
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
           className="fixed inset-0 z-40 h-screen grid grid-cols-1 md:grid-cols-[1fr_minmax(320px,50%)]"
         >
           {/* Left column */}
-          <div className="relative min-h-screen h-full w-full min-w-0 overflow-hidden">
+          <motion.div 
+            className="relative min-h-screen h-full w-full min-w-0 overflow-hidden"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+          >
             <div className="absolute inset-0 bg-black">
               <IndustrialGridEffect color="rgba(255, 107, 53, 0.4)" opacity={0.3} />
               <TechScanEffect color="rgba(255, 107, 53, 0.6)" opacity={0.4} />
@@ -531,14 +538,19 @@ export default function ExperienceOverlay({ isOpen, onClose }: ExperienceOverlay
               rotationSpeed={0.0015}
               embedded
             />
-          </div>
+          </motion.div>
 
           {/* Right column: Terminal Panel */}
           <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ 
+              type: 'spring', 
+              damping: 28, 
+              stiffness: 200,
+              opacity: { duration: 0.4, delay: 0.1 }
+            }}
             className="group/nav relative h-screen w-full min-w-0 bg-black/95 border-l-2 border-orange-500 shadow-2xl font-mono flex flex-col"
             style={{
               overflow: 'hidden',
@@ -590,32 +602,32 @@ export default function ExperienceOverlay({ isOpen, onClose }: ExperienceOverlay
                 style={{ height: 'calc(100vh - 120px)', overflowY: 'auto' }}
               >
                 {/* Company Name */}
-                <div className="mb-8 border-l-4 border-orange-500 pl-4">
-                  <div className="text-orange-500 text-xs tracking-widest mb-2 opacity-60">ORGANIZATION_ID</div>
-                  <h2 className="text-4xl font-bold text-orange-500 tracking-wider mb-3 font-orbitron">
+                <div className="mb-6 border-l-4 border-orange-500 pl-4">
+                  <div className="text-orange-500 text-sm tracking-widest mb-2 opacity-60">ORGANIZATION_ID</div>
+                  <h2 className="text-5xl font-bold text-orange-500 tracking-wider mb-3 font-orbitron">
                     {displayText}<span className="animate-pulse">_</span>
                   </h2>
-                  <h3 className="text-xl text-orange-400 tracking-wide uppercase">{currentExperience.role}</h3>
+                  <h3 className="text-2xl text-orange-400 tracking-wide uppercase">{currentExperience.role}</h3>
                 </div>
 
                 {/* Meta Grid */}
-                <div className="grid grid-cols-3 gap-4 mb-8">
+                <div className="grid grid-cols-3 gap-3 mb-6">
                   {[
                     { label: 'LOCATION', value: currentExperience.location },
                     { label: 'DURATION', value: currentExperience.duration },
                     { label: 'TYPE',     value: currentExperience.type     },
                   ].map(({ label, value }) => (
                     <div key={label} className="border border-orange-500/30 bg-orange-500/5 p-3">
-                      <div className="text-orange-500/60 text-xs mb-1">{label}</div>
-                      <div className="text-orange-300 text-sm">{value}</div>
+                      <div className="text-orange-500/60 text-sm mb-1">{label}</div>
+                      <div className="text-orange-300 text-base font-semibold">{value}</div>
                     </div>
                   ))}
                 </div>
 
                 {/* Key Metrics — animated counters */}
                 {currentExperience.metrics && currentExperience.metrics.length > 0 && (
-                  <div className="mb-8">
-                    <div className="text-orange-500 text-sm tracking-widest mb-3 flex items-center gap-2">
+                  <div className="mb-6">
+                    <div className="text-orange-500 text-base tracking-widest mb-3 flex items-center gap-2">
                       <span className="inline-block w-2 h-2 bg-orange-500 animate-pulse" />
                       KEY_METRICS.DAT
                     </div>
@@ -628,7 +640,7 @@ export default function ExperienceOverlay({ isOpen, onClose }: ExperienceOverlay
                           transition={{ delay: index * 0.1 }}
                           className="border border-orange-500/50 bg-gradient-to-br from-orange-500/10 to-transparent p-3 hover:border-orange-500 transition-all group"
                         >
-                          <div className="text-orange-300 text-xs font-semibold group-hover:text-orange-500 transition-colors tabular-nums">
+                          <div className="text-orange-300 text-sm font-semibold group-hover:text-orange-500 transition-colors tabular-nums">
                             <AnimatedMetric value={metric} trigger={animTrigger} />
                           </div>
                         </motion.div>
@@ -638,8 +650,8 @@ export default function ExperienceOverlay({ isOpen, onClose }: ExperienceOverlay
                 )}
 
                 {/* Operations Log — typewriter */}
-                <div className="mb-8">
-                  <div className="text-orange-500 text-sm tracking-widest mb-3 flex items-center gap-2">
+                <div className="mb-6">
+                  <div className="text-orange-500 text-base tracking-widest mb-3 flex items-center gap-2">
                     <span className="inline-block w-2 h-2 bg-orange-500 animate-pulse" />
                     OPERATIONS_LOG.TXT
                   </div>
@@ -652,7 +664,7 @@ export default function ExperienceOverlay({ isOpen, onClose }: ExperienceOverlay
 
                 {/* Technologies */}
                 <div className="mb-6">
-                  <div className="text-orange-500 text-sm tracking-widest mb-3 flex items-center gap-2">
+                  <div className="text-orange-500 text-base tracking-widest mb-3 flex items-center gap-2">
                     <span className="inline-block w-2 h-2 bg-orange-500 animate-pulse" />
                     TECH_STACK.SYS
                   </div>
@@ -663,7 +675,7 @@ export default function ExperienceOverlay({ isOpen, onClose }: ExperienceOverlay
                         initial={{ opacity: 0, y: 4 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className="px-3 py-1 border border-orange-500/50 text-orange-400 text-xs tracking-wider hover:bg-orange-500/20 hover:border-orange-500 transition-all cursor-default"
+                        className="px-3 py-1.5 border border-orange-500/50 text-orange-400 text-sm tracking-wider hover:bg-orange-500/20 hover:border-orange-500 transition-all cursor-default"
                       >
                         {tech.toUpperCase()}
                       </motion.span>
@@ -673,73 +685,73 @@ export default function ExperienceOverlay({ isOpen, onClose }: ExperienceOverlay
 
                 {/* Entry-specific visualization */}
                 {currentIndex === 0 && (
-                  <div className="flex-1 min-h-[180px] mt-2 relative border border-orange-500/20 bg-black/40 overflow-hidden">
+                  <div className="flex-1 min-h-[220px] mt-2 relative border border-orange-500/20 bg-black/40 overflow-hidden">
                     <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-orange-500/60" />
                     <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-orange-500/60" />
                     <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-orange-500/60" />
                     <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-orange-500/60" />
-                    <div className="absolute top-2 left-3 text-orange-500/40 text-[9px] tracking-widest font-mono z-10">
+                    <div className="absolute top-2 left-3 text-orange-500/40 text-[11px] tracking-widest font-mono z-10">
                       PIPELINE_TOPOLOGY.VIZ
                     </div>
                     <div className="absolute top-2 right-3 flex items-center gap-3 z-10">
-                      <span className="text-[8px] font-mono flex items-center gap-1 text-yellow-300/60">
-                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-yellow-300/60" /> DATA
+                      <span className="text-[10px] font-mono flex items-center gap-1.5 text-yellow-300/60">
+                        <span className="inline-block w-2 h-2 rounded-full bg-yellow-300/60" /> DATA
                       </span>
-                      <span className="text-[8px] font-mono flex items-center gap-1 text-blue-300/60">
-                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-300/60" /> SNAPSHOT
+                      <span className="text-[10px] font-mono flex items-center gap-1.5 text-blue-300/60">
+                        <span className="inline-block w-2 h-2 rounded-full bg-blue-300/60" /> SNAPSHOT
                       </span>
-                      <span className="text-[8px] font-mono flex items-center gap-1 text-red-400/60">
-                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-400/60" /> ERROR
+                      <span className="text-[10px] font-mono flex items-center gap-1.5 text-red-400/60">
+                        <span className="inline-block w-2 h-2 rounded-full bg-red-400/60" /> ERROR
                       </span>
                     </div>
-                    <div className="absolute inset-0 pt-5 pb-5 px-1">
+                    <div className="absolute inset-0 pt-6 pb-6 px-2">
                       <PipelineViz />
                     </div>
-                    <div className="absolute bottom-2 left-3 text-orange-500/50 text-[9px] tracking-widest font-mono flex items-center gap-1">
-                      <span className="inline-block w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse" />
+                    <div className="absolute bottom-2 left-3 text-orange-500/50 text-[11px] tracking-widest font-mono flex items-center gap-1.5">
+                      <span className="inline-block w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
                       DATA_STREAM.ACTIVE
                     </div>
-                    <div className="absolute bottom-2 right-3 text-orange-500/30 text-[9px] tracking-widest font-mono">
+                    <div className="absolute bottom-2 right-3 text-orange-500/30 text-[11px] tracking-widest font-mono">
                       500GB+ DAILY
                     </div>
                   </div>
                 )}
                 {currentIndex === 1 && (
-                  <div className="flex-1 min-h-[180px] mt-2 relative border border-orange-500/20 bg-black/40 overflow-hidden">
+                  <div className="flex-1 min-h-[220px] mt-2 relative border border-orange-500/20 bg-black/40 overflow-hidden">
                     <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-orange-500/60" />
                     <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-orange-500/60" />
                     <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-orange-500/60" />
                     <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-orange-500/60" />
-                    <div className="absolute top-2 left-3 text-orange-500/40 text-[9px] tracking-widest font-mono">
+                    <div className="absolute top-2 left-3 text-orange-500/40 text-[11px] tracking-widest font-mono">
                       API_NETWORK.VIZ
                     </div>
-                    <div className="absolute inset-0 pt-5 pb-2 px-2">
+                    <div className="absolute inset-0 pt-6 pb-3 px-2">
                       <ApiNetworkViz />
                     </div>
-                    <div className="absolute bottom-2 left-3 text-orange-500/50 text-[9px] tracking-widest font-mono flex items-center gap-1">
-                      <span className="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+                    <div className="absolute bottom-2 left-3 text-orange-500/50 text-[11px] tracking-widest font-mono flex items-center gap-1.5">
+                      <span className="inline-block w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                       TX_STREAM.ACTIVE
                     </div>
-                    <div className="absolute bottom-2 right-3 text-orange-500/30 text-[9px] tracking-widest font-mono">
+                    <div className="absolute bottom-2 right-3 text-orange-500/30 text-[11px] tracking-widest font-mono">
                       99.5% UPTIME
                     </div>
                   </div>
                 )}
                 {currentIndex === 2 && (
-                  <div className="flex-1 min-h-[180px] mt-2 relative border border-orange-500/20 bg-black/40 overflow-hidden">
+                  <div className="flex-1 min-h-[220px] mt-2 relative border border-orange-500/20 bg-black/40 overflow-hidden">
                     <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-orange-500/60" />
                     <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-orange-500/60" />
                     <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-orange-500/60" />
                     <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-orange-500/60" />
-                    <div className="absolute top-2 left-3 text-orange-500/40 text-[9px] tracking-widest font-mono z-10">
+                    <div className="absolute top-2 left-3 text-orange-500/40 text-[11px] tracking-widest font-mono z-10">
                       REALTIME_MONITOR.VIZ
                     </div>
                     <CacheMonitorViz />
-                    <div className="absolute bottom-2 left-3 text-orange-500/50 text-[9px] tracking-widest font-mono flex items-center gap-1">
-                      <span className="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+                    <div className="absolute bottom-2 left-3 text-orange-500/50 text-[11px] tracking-widest font-mono flex items-center gap-1.5">
+                      <span className="inline-block w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                       WS_SYNC.ACTIVE
                     </div>
-                    <div className="absolute bottom-2 right-3 text-orange-500/30 text-[9px] tracking-widest font-mono">
+                    <div className="absolute bottom-2 right-3 text-orange-500/30 text-[11px] tracking-widest font-mono">
                       SUB-200MS
                     </div>
                   </div>

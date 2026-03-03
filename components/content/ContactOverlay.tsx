@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from 'react';
 import CommunicationWaves from '../effects/CommunicationWaves';
 import MessageParticles from '../effects/MessageParticles';
 import { SpinningPlanetDisplay } from '../3d/SpinningPlanetDisplay';
+import ResumeDownloadButton from '../ui/ResumeDownloadButton';
 
 interface ContactOverlayProps {
   isOpen: boolean;
@@ -333,24 +334,29 @@ function ScrambleText({ text, delay = 0 }: { text: string; delay?: number }) {
   );
 }
 
-// ─── Blur reveal for body text ────────────────────────────────────────────────
-function GlitchRevealText({ text, delay = 0, className = '' }: { text: string; delay?: number; className?: string }) {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setShow(true), delay);
-    return () => clearTimeout(t);
-  }, [delay]);
-
+// ─── Sweep Reveal — pink theme, used for intro / grid / closing ────────────────
+function SweepReveal({ children, delay }: { children: React.ReactNode; delay: number }) {
   return (
-    <motion.p
-      className={className}
-      initial={{ opacity: 0, y: 6, filter: 'blur(4px)' }}
-      animate={show ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
+    <motion.div
+      className="relative overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: delay / 1000, duration: 0.15 }}
     >
-      {text}
-    </motion.p>
+      <motion.div
+        initial={{ filter: 'blur(5px)', y: 4 }}
+        animate={{ filter: 'blur(0px)', y: 0 }}
+        transition={{ delay: delay / 1000, duration: 0.4, ease: 'easeOut' }}
+      >
+        {children}
+      </motion.div>
+      <motion.div
+        className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-pink-400/60 to-transparent pointer-events-none"
+        initial={{ top: '0%', opacity: 1 }}
+        animate={{ top: '110%', opacity: 0 }}
+        transition={{ delay: delay / 1000, duration: 0.4, ease: 'easeIn' }}
+      />
+    </motion.div>
   );
 }
 
@@ -368,10 +374,17 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
           className="fixed inset-0 z-40 h-screen grid grid-cols-1 md:grid-cols-[1fr_minmax(380px,55%)]"
         >
           {/* Left column */}
-          <div className="relative min-h-screen h-full w-full min-w-0 overflow-hidden">
+          <motion.div 
+            className="relative min-h-screen h-full w-full min-w-0 overflow-hidden"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+          >
             <div className="absolute inset-0 bg-black">
               <CommunicationWaves color="rgba(255, 105, 180, 0.5)" opacity={0.4} />
               <MessageParticles color="rgba(255, 105, 180, 0.6)" opacity={0.3} />
@@ -392,14 +405,19 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
               rotationSpeed={0.002}
               embedded
             />
-          </div>
+          </motion.div>
 
           {/* Right column */}
           <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ 
+              type: 'spring', 
+              damping: 28, 
+              stiffness: 200,
+              opacity: { duration: 0.4, delay: 0.1 }
+            }}
             className="relative h-screen w-full min-w-0 bg-black/95 border-l-2 border-pink-400 shadow-2xl font-mono flex flex-col"
             style={{
               overflow: 'hidden',
@@ -435,7 +453,7 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
                 </h2>
               </motion.div>
 
-              {/* Intro — blur reveal */}
+              {/* Intro */}
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -443,14 +461,14 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
                 className="border-l-2 border-pink-400/30 pl-5 flex-shrink-0"
               >
                 <div className="text-pink-400/60 text-base tracking-widest mb-2">GET_IN_TOUCH.EXE</div>
-                <GlitchRevealText
-                  text={textSection.type === 'text' ? textSection.content : ''}
-                  delay={600}
-                  className="text-pink-100/80 text-lg leading-relaxed"
-                />
+                <SweepReveal delay={400}>
+                  <p className="text-pink-100/80 text-lg leading-relaxed">
+                    {textSection.type === 'text' ? textSection.content : ''}
+                  </p>
+                </SweepReveal>
               </motion.div>
 
-              {/* Contact grid — spring stagger */}
+              {/* Contact grid */}
               <div className="flex-shrink-0">
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -463,28 +481,40 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
                 </motion.div>
                 <div className="grid grid-cols-2 gap-4">
                   {gridItems.map((item, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 12, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{ delay: 0.6 + index * 0.08, type: 'spring', stiffness: 300, damping: 24 }}
-                      className={`border border-pink-400/30 bg-pink-400/5 p-5 transition-all group ${item.link ? 'hover:border-pink-400 hover:bg-pink-400/10 cursor-pointer' : ''}`}
-                      onClick={() => item.link && window.open(item.link, '_blank')}
-                    >
-                      <div className="flex items-center gap-1.5 text-pink-400/60 text-base mb-2 tracking-widest group-hover:text-pink-400/80 transition-colors">
-                        {getIcon(item.label)}
-                        {item.label}
-                        {item.link && <ExternalLink className="w-4 h-4 ml-auto" />}
+                    <SweepReveal key={index} delay={600 + index * 80}>
+                      <div
+                        className={`border border-pink-400/30 bg-pink-400/5 p-5 transition-all group ${item.link ? 'hover:border-pink-400 hover:bg-pink-400/10 cursor-pointer' : ''}`}
+                        onClick={() => item.link && window.open(item.link, '_blank')}
+                      >
+                        <div className="flex items-center gap-1.5 text-pink-400/60 text-base mb-2 tracking-widest group-hover:text-pink-400/80 transition-colors">
+                          {getIcon(item.label)}
+                          {item.label}
+                          {item.link && <ExternalLink className="w-4 h-4 ml-auto" />}
+                        </div>
+                        <div className="text-pink-100 text-lg leading-relaxed group-hover:text-white transition-colors break-all">
+                          {item.value}
+                        </div>
                       </div>
-                      <div className="text-pink-100 text-lg leading-relaxed group-hover:text-white transition-colors break-all">
-                        {item.value}
-                      </div>
-                    </motion.div>
+                    </SweepReveal>
                   ))}
                 </div>
               </div>
 
-              {/* Closing — blur reveal */}
+              {/* Resume Download Button */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.65, duration: 0.4 }}
+                className="flex-shrink-0"
+              >
+                <div className="text-pink-400 text-base tracking-widest mb-3 flex items-center gap-2">
+                  <span className="inline-block w-2 h-2 bg-pink-400 animate-pulse" />
+                  RESUME_FILE.EXE
+                </div>
+                <ResumeDownloadButton />
+              </motion.div>
+
+              {/* Closing */}
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -492,11 +522,11 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
                 className="border-l-2 border-pink-400/30 pl-5 flex-shrink-0"
               >
                 <div className="text-pink-400/60 text-base tracking-widest mb-2">LETS_BUILD_SOMETHING.LOG</div>
-                <GlitchRevealText
-                  text={closingSection.type === 'text' ? closingSection.content : ''}
-                  delay={1200}
-                  className="text-pink-100/70 text-lg leading-relaxed"
-                />
+                <SweepReveal delay={1100}>
+                  <p className="text-pink-100/70 text-lg leading-relaxed">
+                    {closingSection.type === 'text' ? closingSection.content : ''}
+                  </p>
+                </SweepReveal>
               </motion.div>
 
               {/* Satellite viz — fills remaining space */}
