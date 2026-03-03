@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from 'react';
 import CommunicationWaves from '../effects/CommunicationWaves';
 import MessageParticles from '../effects/MessageParticles';
 import { SpinningPlanetDisplay } from '../3d/SpinningPlanetDisplay';
+import ResumeDownloadButton from '../ui/ResumeDownloadButton';
 
 interface ContactOverlayProps {
   isOpen: boolean;
@@ -373,10 +374,17 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
           className="fixed inset-0 z-40 h-screen grid grid-cols-1 md:grid-cols-[1fr_minmax(380px,55%)]"
         >
           {/* Left column */}
-          <div className="relative min-h-screen h-full w-full min-w-0 overflow-hidden">
+          <motion.div 
+            className="relative min-h-screen h-full w-full min-w-0 overflow-hidden"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+          >
             <div className="absolute inset-0 bg-black">
               <CommunicationWaves color="rgba(255, 105, 180, 0.5)" opacity={0.4} />
               <MessageParticles color="rgba(255, 105, 180, 0.6)" opacity={0.3} />
@@ -397,14 +405,19 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
               rotationSpeed={0.002}
               embedded
             />
-          </div>
+          </motion.div>
 
           {/* Right column */}
           <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ 
+              type: 'spring', 
+              damping: 28, 
+              stiffness: 200,
+              opacity: { duration: 0.4, delay: 0.1 }
+            }}
             className="relative h-screen w-full min-w-0 bg-black/95 border-l-2 border-pink-400 shadow-2xl font-mono flex flex-col"
             style={{
               overflow: 'hidden',
@@ -486,6 +499,20 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
                   ))}
                 </div>
               </div>
+
+              {/* Resume Download Button */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.65, duration: 0.4 }}
+                className="flex-shrink-0"
+              >
+                <div className="text-pink-400 text-base tracking-widest mb-3 flex items-center gap-2">
+                  <span className="inline-block w-2 h-2 bg-pink-400 animate-pulse" />
+                  RESUME_FILE.EXE
+                </div>
+                <ResumeDownloadButton />
+              </motion.div>
 
               {/* Closing */}
               <motion.div

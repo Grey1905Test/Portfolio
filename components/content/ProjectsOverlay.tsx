@@ -52,10 +52,17 @@ export default function ProjectsOverlay({ isOpen, onClose }: ProjectsOverlayProp
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
           className="fixed inset-0 z-40 h-screen grid grid-cols-1 md:grid-cols-[1fr_minmax(320px,50%)]"
         >
           {/* Left column: backdrop + planet (min-h-screen/min-w-0 so it has size on first paint) */}
-          <div className="relative min-h-screen h-full w-full min-w-0 overflow-hidden">
+          <motion.div 
+            className="relative min-h-screen h-full w-full min-w-0 overflow-hidden"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+          >
             <div className="absolute inset-0 bg-black">
               <CircuitNetworkEffect color="rgba(0, 255, 0, 0.5)" opacity={0.4} />
               <DataFlowEffect color="rgba(0, 255, 0, 0.7)" opacity={0.3} />
@@ -79,14 +86,19 @@ export default function ProjectsOverlay({ isOpen, onClose }: ProjectsOverlayProp
               rotationSpeed={0.0025}
               embedded
             />
-          </div>
+          </motion.div>
 
           {/* Right column: Terminal Panel (sidebar) */}
           <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ 
+              type: 'spring', 
+              damping: 28, 
+              stiffness: 200,
+              opacity: { duration: 0.4, delay: 0.1 }
+            }}
             className="group/nav relative h-screen w-full min-w-0 bg-black/95 border-l-2 border-green-500 shadow-2xl font-mono flex flex-col"
             style={{
               overflow: 'hidden',
